@@ -21,7 +21,7 @@ class Engine:
         self.code = code
 
     def _save_history(self, code):
-        self.history = self.history[:history_pointer + 1]
+        self.history = self.history[:self.history_pointer + 1]
         self.history.append(code)
         self.history_pointer = len(self.history) - 1
 
