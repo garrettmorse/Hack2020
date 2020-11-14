@@ -100,8 +100,6 @@ class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean
                     handleRecording={this.sendRecording.bind(this)} />
                 </Container>
               </Grid.Column>
-
-
             </Grid>
 
             <Divider vertical><Icon name='long arrow alternate right' /></Divider>

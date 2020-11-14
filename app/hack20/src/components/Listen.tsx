@@ -70,10 +70,12 @@ const Listen = (props: any) => {
             <Header as='h3'>Record Speech</Header>
 
             <Container>
-                <Button color={showTranscript ? 'blue' : undefined} onClick={async () => {
-                    resetTranscript();
-                    setShowTranscript(true);
-                }}>
+                <Button style={{ position: 'fixed', top: 2, right: 0, cursor: 'pointer', zIndex: 1000 }}
+                    color={showTranscript ? 'blue' : undefined}
+                    onClick={async () => {
+                        resetTranscript();
+                        setShowTranscript(true);
+                    }}>
                     Record
             </Button>
                 <div style={{ background: 'white' }}>
