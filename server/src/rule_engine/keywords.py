@@ -5,7 +5,6 @@ class PrimaryKeywords(enum.Enum):
     FUNCTION = "function"
     CALL = "call"
     RETURN = "return"
-    THEN = "then"
     IF = "if"
     ELSE = "else"
     SET = "set"
@@ -24,7 +23,6 @@ class PrimaryKeywords(enum.Enum):
 
 class SecondaryKeywords(enum.Enum):
     ARGUMENT = "argument"
-    ARGUMENTS = "arguments"
     PLUS = "plus"
     MINUS = "minus"
     TIMES = "times"
@@ -38,6 +36,9 @@ class SecondaryKeywords(enum.Enum):
     EQUALS = "equals"
     AND = "and"
     OR = "or"
+    TO = "to"
+    RANGE = "range"
+    IN = "in"
 
     @staticmethod
     def list_keys():
