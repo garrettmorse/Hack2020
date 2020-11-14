@@ -1,25 +1,35 @@
-import os
 import sys
+from .keywords import PrimaryKeywords, SecondaryKeywords
 
 
 class RuleEngine:
     def __init__(self):
-        pass
+        # TODO: Dict of something
+        self.symbols = {}
 
-    def parse_wrapper(self, text: str):
-        tokens = text.split()
-        return self.parse(tokens)
+    def parse(self, text: str):
+        tokens = text.strip().split(" ")
 
-    def parse(self, tokens):
-        # Other work here
+        parsed_tokens = []
+        for token in tokens:
+            lowercase_token = token.lower()
+            if lowercase_token in PrimaryKeywords:
+                parsed_tokens.append(PrimaryKeywords[token])
+            elif lowercase_token in SecondaryKeywords:
+                parsed_tokens.append(SecondaryKeywords[token])
+            else:
+                parsed_tokens.append(token)
 
-        result = ""
-        return result
+        return self.parse_core(tokens)
+
+    def parse_core(self, tokens):
+        first = tokens[0]
+        if first in PrimaryKeywords:
+            return getattr(self, f"parse_{first.value}")(tokens)
+        else:
+            print("NOT IMPLEMENTED EXCEPTION")
 
     def parse_function(self, tokens):
-        pass
-
-    def parse_argument(self, tokens):
         pass
 
     def parse_call(self, tokens):
@@ -28,53 +38,23 @@ class RuleEngine:
     def parse_return(self, tokens):
         pass
 
-    def parse_plus(self, tokens):
-        pass
-
-    def parse_minus(self, tokens):
-        pass
-
-    def parse_times(self, tokens):
-        pass
-
-    def parse_dot(self, tokens):
-        pass
-
-    def parse_divide(self, tokens):
-        pass
-
     def parse_then(self, tokens):
         pass
 
-    def parse_greater_than(self, tokens):
+    def parse_if(self, tokens):
         pass
 
-    def parse_less_than(self, tokens):
+    def parse_else(self, tokens):
         pass
 
-    def parse_greater_than_or_equal_to(self, tokens):
+    def parse_set(self, tokens):
         pass
 
-    def parse_less_than_or_equal_to(self, tokens):
+    def parse_append(self, tokens):
         pass
 
+    def parse_prepend(self, tokens):
+        pass
 
-# PLUS = "plus"
-# MINUS = "minus"
-# TIMES = "times"
-# DOT = "dot"
-# DIVIDE = "divide"
-# THEN = "then"
-# GREATER_THAN = "greater_than"
-# LESS_THAN = "less_than"
-# GREATER_THAN_OR_EQUAL_TO = "greater_than_or_equal_to"
-# LESS_THAN_OR_EQUAL_TO = "less_than_or_equal_to"
-# IF = "if"
-# ELSE = "else"
-# SET = "set"
-# EQUALS = "equals"
-# AND = "and"
-# OR = "or"
-# APPEND = "append"
-# PREPEND = "prepend"
-# FOR = "for"
+    def parse_for(self, tokens):
+        pass

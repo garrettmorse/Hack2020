@@ -5,14 +5,12 @@ default_code_path = "./src/engine/default_code.py"
 
 
 class Engine:
-
     def __init__(self):
         with open(default_code_path, "r") as fin:
             raw_code = fin.readlines()
             self.code = self.parse_code(self.stringify_code(raw_code))
         self.history = []
         self.history_pos = -1
-        self.rule_engine = RuleEngine()
 
     @classmethod
     def stringify_code(self, code: List[str]) -> str:
