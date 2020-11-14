@@ -7,6 +7,45 @@ class RuleEngine:
         # TODO: Dict of something
         self.symbols = {}
 
+    @classmethod
+    def find_next(self, tokens, *containers):
+        for index, token in enumerate(tokens):
+            for container in containers:
+                if token in container:
+                    return index, token
+        return -1, None
+
+    @classmethod
+    def find_next_specific(self, tokens, token_specific):
+        for index, token in enumerate(tokens):
+            if token == token_specific:
+                return index, token
+        return -1, None
+
+    @classmethod
+    def is_EOS(self, tokens):
+        if not tokens or len(tokens) == 0:
+            return True
+        else:
+            return False
+
+    @classmethod
+    def is_last(self, tokens):
+        if not tokens:
+            return False
+        elif len(tokens) == 1:
+            return True
+        else:
+            return False
+
+    @classmethod
+    def consume(self, tokens):
+        return tokens[1:]
+
+    @classmethod
+    def consume_many(self, tokens, number):
+        return tokens[1 + number :]
+
     def parse(self, text: str):
         tokens = text.strip().split(" ")
 
@@ -36,7 +75,7 @@ class RuleEngine:
         pass
 
     def parse_return(self, tokens):
-        pass
+        return f"return {self.parse_core(tokens)}\n"
 
     def parse_then(self, tokens):
         pass
