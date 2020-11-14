@@ -5,14 +5,16 @@ from contextlib import redirect_stdout, redirect_stderr
 from flask import Flask, request
 from flask_cors import CORS
 
-from src.engine import Engine
+from src import Parser, RuleEngine, StateEngine
 
 # Flask Setup
 app = Flask(__name__)
 CORS(app)
 
 # Engine Setup
-engine = Engine()
+state_engine = StateEngine()
+# parser = Parser()
+rule_engine = RuleEngine()
 
 
 # Routes
@@ -28,15 +30,15 @@ def operations_redo():
 
 @app.route("/operations/undo", methods=["POST"])
 def operations_undo():
-    engine.undo_history()
-    return {"code": engine.get_code(), "success": True}
+    state_engine.undo_history()
+    return {"code": state_engine.get_code(), "success": True}
 
 
 @app.route("/operations/execute", methods=["POST"])
 def operations_execute():
     body = request.json
     raw_code = body.get("code", None)
-    engine.set_code(raw_code)
+    state_engine.set_code(raw_code)
 
     result = {"output": "Error. Something went wrong", "success": False}
 
@@ -45,7 +47,7 @@ def operations_execute():
         sys.stdout, sys.stderr = code_out, code_err
 
         code_object = compile(
-            engine.get_code(),
+            state_engine.get_code(),
             "execute.py",
             "exec",
         )
@@ -68,13 +70,17 @@ def operations_execute():
 @app.route("/operations/process", methods=["POST"])
 def operations_process():
     body = request.json
-    text = body.get("transcript", None)
+    raw_text = body.get("transcript", None)
     raw_code = body.get("code", None)
-    engine.set_code(raw_code)
-    print(text)
-    print(raw_code)
-    print("NOT IMPLEMENTED EXCEPTION")
-    return {"code": engine.get_code(), "success": True}
+
+    # TODO: Wait for model ~3GB
+    # text = parser.predict(raw_text)
+
+    # TODO: Feed raw_code into parse
+    new_code = rule_engine.parse(text)
+    state_engine.set_code(raw_code + new_code)
+
+    return {"code": state_engine.get_code(), "success": True}
 
 
 # Main

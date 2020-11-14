@@ -1,10 +1,10 @@
 import sys
 from typing import Any, Dict, List, Optional
 
-default_code_path = "./src/engine/default_code.py"
+default_code_path = "./src/state_engine/default_code.py"
 
 
-class Engine:
+class StateEngine:
     def __init__(self):
         with open(default_code_path, "r") as fin:
             raw_code = fin.readlines()
