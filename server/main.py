@@ -1,6 +1,5 @@
 import io
 import sys
-from contextlib import redirect_stdout, redirect_stderr
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -51,7 +50,7 @@ def operations_execute():
             "execute.py",
             "exec",
         )
-        exec(code_object)
+        exec(code_object, {})
 
         output, error = code_out.getvalue(), code_err.getvalue()
         code_out.close()
