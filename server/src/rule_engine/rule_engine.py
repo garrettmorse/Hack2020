@@ -105,7 +105,7 @@ class RuleEngine:
             params[j] = tokens[j]
         params[j] = tokens[j:].join("_")
 
-        self.symbols[func_name: Symbol(func_name, dict("type": "function", "params": params, "num_params": len(params))]
+        self.symbols[func_name] = Symbol(func_name, dict("type": "function", "params": params, "num_params": len(params))
 
         return [self._build_func_definition(func_name, params)]
 
@@ -114,9 +114,6 @@ class RuleEngine:
 
     def parse_return(self, tokens):
         return f"return {self.parse_core(tokens)}\n"
-
-    def parse_then(self, tokens):
-        pass
 
     def parse_if(self, tokens: List[str]) -> List[str]:
         """
@@ -137,7 +134,6 @@ class RuleEngine:
         else:
             code_rep.append("\t" + self.parse_core(tokens[:else_i]))
             tokens=tokens[else_i + 1:]
-
 
         while not self.is_EOS(tokens):
             then_i, _=self.find_next_specific(tokens, SecondaryKeywords.THEN)
@@ -160,11 +156,18 @@ class RuleEngine:
 
         return code_rep
 
-    def parse_else(self, tokens):
-        pass
-
-    def parse_set(self, tokens):
-        pass
+    def parse_set(self, tokens: List[str]) -> List[str]:
+        """
+        SET x to y
+        """
+        code_rep=[]
+        to_i=self.find_next_specific(tokens, SecondaryKeywords.TO)
+        name=" ".join(tokens[1:to_i])
+        tokens=[to_i + 1:]
+        expr=self.parse_core(tokens)
+        code_rep.append(f"{name}={expr}\n")
+        self.symbols[name]=Symbol(name, expr)
+        return code_rep
 
     def parse_append(self, tokens):
         pass
