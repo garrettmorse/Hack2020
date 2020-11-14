@@ -13,10 +13,10 @@ dataset = datasets.load_from_disk(disk.UNVERSIONED_DATA_DIR / "features")
 
 # fine tune
 
-device = torch.device("cuda") if torch.cuda.is_available else torch.device("cpu")
+device = torch.device("cuda") if torch.cuda.is_available else torch.device("cpu")  # type: ignore
 
 # 1. instantiate the model
-def train(cli_args) -> None:
+def train(cli_args: argparse.Namespace) -> None:
     model = BartForConditionalGeneration.from_pretrained("facebook/bart-base")
     model.to(device)
 

@@ -42,7 +42,7 @@ print(
 )
 
 
-def predict(utterance: str) -> str:
+def predict(utterance: str) -> None:
     input_encodings = tokenizer.batch_encode_plus(
         [utterance],
         max_length=128,
