@@ -30,6 +30,6 @@ the result of,
 let,make a new variable,define variable,
 to the end of,to,at the end of,at the back of
 at the front of,at the start of
-insert,put
+prepend,put,insert
 append,add,insert
 that,
