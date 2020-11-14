@@ -1,31 +1,52 @@
 import sys
-from typing import List
+from typing import Any, Dict, List, Optional
 
-default_code = "./src/engine/default_code.py"
+default_code_path = "./src/engine/default_code.py"
 
 
 class Engine:
 
     def __init__(self):
-        with open(default_code, "r") as fin:
-            self.code: List[str] = fin.readlines()
-            self.history = []
-            self.history_pointer = -1
+        with open(default_code_path, "r") as fin:
+            raw_code = fin.readlines()
+            self.code = self.parse_code(self.stringify_code(raw_code))
+        self.history = []
+        self.history_pos = -1
+        self.rule_engine = RuleEngine()
 
-    def stringify_and_get_code(self) -> str:
-        return "".join(self.code)
+    @classmethod
+    def stringify_code(self, code: List[str]) -> str:
+        return "".join(code)
 
-    def parse_and_set_code(self, code: str) -> None:
-        lines = code.split("\n")
+    @classmethod
+    def parse_code(self, raw_code: str) -> List[str]:
+        replace_dict = {"    ": "\t", "\r\n": "\n"}
+        for k, v in replace_dict.items():
+            raw_code = raw_code.replace(k, v)
+        lines = raw_code.split("\n")
         code = [line + "\n" for line in lines]
-        self.code = code
+        return code
 
-    def _save_history(self, code):
-        self.history = self.history[:history_pointer + 1]
-        self.history.append(code)
-        self.history_pointer = len(self.history) - 1
+    def set_code(self, raw_code: str):
+        self.code = Engine.parse_code(raw_code)
+        self.save_history()
 
-    def _undo(self, code):
-        if self.history_pointer > 0:
-            self.history_pointer -= 1
-        return self.history[self.history_pointer]
+    def get_code(self):
+        return Engine.stringify_code(self.code)
+
+    def get_state(self) -> Dict[str, Any]:
+        return {"code": self.code}
+
+    def set_state(self, state: Dict[str, Any]):
+        self.code = state["code"]
+
+    def save_history(self):
+        self.history = self.history[: self.history_pos + 1]
+        self.history.append(self.get_state())
+        self.history_pos = len(self.history) - 1
+
+    def undo_history(self):
+        if self.history_pos > 0:
+            self.history_pos -= 1
+        state = self.history[self.history_pos]
+        self.set_state(state)
