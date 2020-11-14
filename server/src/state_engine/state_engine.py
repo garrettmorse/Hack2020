@@ -1,5 +1,4 @@
-import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 default_code_path = "./src/state_engine/default_code.py"
 
