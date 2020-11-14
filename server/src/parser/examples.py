@@ -33,10 +33,10 @@ def read_synonyms(filepath: Path) -> List[List[str]]:
 
 
 SYNONYMS = read_synonyms(disk.VERSIONED_DATA_DIR / "synonyms.csv")
-print(sum(map(len, SYNONYMS)))
+print(sum(map(len, SYNONYMS)), "synonyms")
 
 VARIABLES = read_synonyms(disk.VERSIONED_DATA_DIR / "variables.csv")
-print(len(VARIABLES))
+print(sum(map(len, VARIABLES)), "variables")
 
 int_pattern = re.compile("\$int\d+")
 string_pattern = re.compile("\$string\d+")

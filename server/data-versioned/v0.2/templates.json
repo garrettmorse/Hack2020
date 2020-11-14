@@ -123,12 +123,12 @@
             "return n input if n in input else zero"
         ],
         [
-            "{define a function} read from file {that takes} {argument} string filename",
-            "function read from file one argument filename"
+            "{define a function} read from file {that takes} {argument} string $path1",
+            "function read from $path1 one argument filename"
         ],
         [
-            "with open filename as fin",
-            "with open filename as fin"
+            "with open $path1 as fin",
+            "with open $path1 as fin"
         ],
         [
             "{return} fin read all lines",
@@ -201,8 +201,8 @@
             "return fibonacci n minus one plus fibonacci n minus two"
         ],
         [
-            "with open filename as file",
-            "with open filename as file"
+            "with open $path1 as file",
+            "with open $path1 as file"
         ],
         [
             "{print} file dot read",
