@@ -4,7 +4,7 @@ import sys
 from flask import Flask, request
 from flask_cors import CORS
 
-from src import Parer, RuleEngine, StateEngine
+from src import Parser, RuleEngine, StateEngine
 
 # Flask Setup
 app = Flask(__name__)
