@@ -71,6 +71,9 @@ class RuleEngine:
         for j in range(num_args-1):
             params[j] = tokens[j]
         params[j] = tokens[j:].join("_")
+
+        self.symbols[func_name: Symbol(func_name, dict("type": "function", "params": params, "num_params": len(params)))]
+
         return _build_func_definition(func_name, params)
 
     def parse_call(self, tokens):
