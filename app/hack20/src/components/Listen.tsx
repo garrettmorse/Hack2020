@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import { Button, Container, Loader } from 'semantic-ui-react';
-
+import { Button, Container, Header } from 'semantic-ui-react';
+import Siriwave from 'react-siriwave';
+import AppRoutes from '../service/app-routes';
 
 const Listen = (props: any) => {
     const [showTranscript, setShowTranscript] = useState<boolean>(false);
@@ -51,22 +52,36 @@ const Listen = (props: any) => {
                 resetTranscript();
                 console.log('stopped listening');
             }
+        },
+        {
+            command: '*undo',
+            callback: async () => {
+                await AppRoutes.undoCode()
+                    .then(res => {
+                        props.onChangeCode(res.data.code);
+                    });
+            }
         }
     ]
     const { transcript, finalTranscript, resetTranscript } = useSpeechRecognition({ commands });
 
     return (
-        <Container>
+        <div>
+            <Header as='h3'>Record Speech</Header>
 
-            <Button color={showTranscript ? 'blue' : undefined} onClick={async () => {
-                SpeechRecognition.startListening({ continuous: true });
-            }}>
-                Record
+            <Container>
+                <Button color={showTranscript ? 'blue' : undefined} onClick={async () => {
+                    resetTranscript();
+                    setShowTranscript(true);
+                }}>
+                    Record
             </Button>
-            <Loader inline active={showTranscript ? true : false} />
-
-            <p>{showTranscript ? transcript : ''}</p>
-        </Container >
+                <div style={{ background: 'white' }}>
+                    {showTranscript ? (<Siriwave cover={true} amplitude={showTranscript ? 1 : 0.01} style='ios9' />) : null}
+                </div>
+                <p>{showTranscript ? transcript : ''}</p>
+            </Container >
+        </div>
     )
 }
 

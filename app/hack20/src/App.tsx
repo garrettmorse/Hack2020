@@ -57,7 +57,7 @@ class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean
 
   onCodeChange = (newCode: string) => {
     this.setState({ code: newCode });
-    // console.log(`update state.code: ${ this.state.code }`);
+    console.log(`update state.code: ${this.state.code}`);
   }
 
   onOutputChange = (newOutput: string) => {
@@ -76,35 +76,36 @@ class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean
         </div>
         <div>
           <Segment>
-            <Segment>
-              <Grid columns={2} >
-                <Grid.Column>
-                  <Header as='h3'>Code</Header>
-                  <MyEditor loading={this.state.execLoader}
-                    handleCode={this.execCode.bind(this)}
-                    onCodeChange={this.onCodeChange.bind(this)}
-                    code={this.state.code} />
-                </Grid.Column>
-                <Grid.Column>
+            <Grid columns={2} >
+              <Grid.Column>
+                <Header as='h3'>Code</Header>
+                <MyEditor loading={this.state.execLoader}
+                  handleCode={this.execCode.bind(this)}
+                  onCodeChange={this.onCodeChange.bind(this)}
+                  code={this.state.code} />
+              </Grid.Column>
+              <Grid.Column>
+                <Container style={{ height: '40%' }}>
                   <Header as='h3'>Output</Header>
                   <span style={{ whiteSpace: 'pre-line' }}>{this.state.output}</span>
                   {/* <Output output={this.state.output} /> */}
-                </Grid.Column>
+                </Container>
+                <Divider horizontal />
+                <Container>
+                  <Listen executeCode={this.execCode}
+                    loading={this.state.sendLoader}
+                    onTextChange={this.onTextChange}
+                    onCodeChange={this.onCodeChange}
+                    text={this.state.transcript}
+                    handleRecording={this.sendRecording.bind(this)} />
+                </Container>
+              </Grid.Column>
 
 
-              </Grid>
+            </Grid>
 
-              <Divider vertical><Icon name='long arrow alternate right' /></Divider>
-            </Segment>
-            <Container active>
+            <Divider vertical><Icon name='long arrow alternate right' /></Divider>
 
-              <Header as='h3'>Record Speech</Header>
-              <Listen executeCode={this.execCode}
-                loading={this.state.sendLoader}
-                onTextChange={this.onTextChange}
-                text={this.state.transcript}
-                handleRecording={this.sendRecording.bind(this)} />
-            </Container>
           </Segment>
         </div>
       </div >

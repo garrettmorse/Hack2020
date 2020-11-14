@@ -9,6 +9,10 @@ class AppRoutes {
     execCode(data: any) {
         return http.post(`/operations/execute`, data);
     }
+
+    undoCode() {
+        return http.post(`/operations/undo`);
+    }
 }
 
 export default new AppRoutes();
