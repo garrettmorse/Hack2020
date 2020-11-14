@@ -5,6 +5,7 @@ default_code_path = "./src/engine/default_code.py"
 
 
 class Engine:
+
     def __init__(self):
         with open(default_code_path, "r") as fin:
             raw_code = fin.readlines()
