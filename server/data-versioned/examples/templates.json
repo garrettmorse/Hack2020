@@ -100,5 +100,121 @@
             "{insert} result {at the front of} the product list",
             "insert result to front product list"
         ]
+    ],
+    "anmol-templates": [
+        [
+            "{define a function} hello world {that}",
+            "function hello world zero arguments"
+        ],
+        [
+            "prints hello world",
+            "print hello world"
+        ],
+        [
+            "{define a function} {that takes} two {argument}s dictionary n and string input",
+            "function [FUNC] two arguments n input"
+        ],
+        [
+            "returns input in n if n {is in} input {else} zero",
+            "return n input if n in input else zero"
+        ],
+        [
+            "{define a function} read from file {that takes} {argument} string filename",
+            "function read from file one argument filename"
+        ],
+        [
+            "with open filename as fin",
+            "with open filename as fin"
+        ],
+        [
+            "{return} fin read all lines",
+            "return fin read all lines"
+        ],
+        [
+            "{return} fin read {each} line",
+            "return fin read all lines"
+        ],
+        [
+            "{call} print on everything in cities",
+            "for element in city print city"
+        ],
+        [
+            "{call} print on {each} {element} in cities",
+            "for element in city print city"
+        ],
+        [
+            "{define a function} {that takes} name",
+            "function [FUNC] one argument name"
+        ],
+        [
+            "{return} hi plus name",
+            "return hi plus name"
+        ]
+    ],
+    "sam-templates": [
+        [
+            "{define a function} hello",
+            "function hello zero args"
+        ],
+        [
+            "{print} hello world",
+            "print hello world"
+        ],
+        [
+            "{define a function} called is palindrome {that takes} one {argument} called s",
+            "function is palindrome one argument s"
+        ],
+        [
+            "{let} reversed {equal} s followed by open bracket colon colon negative one close bracket",
+            "reversed equals s open bracket colon colon negative one close bracket"
+        ],
+        [
+            "{return} reversed equals s",
+            "return reversed equals s"
+        ],
+        [
+            "{define a function} fibonacci {that takes} one {argument} n",
+            "function fibonacci one argument s"
+        ],
+        [
+            "{if} n {is less than} or equal to {two}",
+            "if n less than or equal two"
+        ],
+        [
+            "{return} n",
+            "return n"
+        ],
+        [
+            "{else}",
+            "else"
+        ],
+        [
+            "{return} fibonacci of n minus one plus fibonacci of n minus two",
+            "return fibonacci n minus one plus fibonacci n minus two"
+        ],
+        [
+            "with open filename as file",
+            "with open filename as file"
+        ],
+        [
+            "{print} file dot read",
+            "print file dot read"
+        ],
+        [
+            "{let} doubled {equal} {the result of} applying double to {each} {element} {from} the list",
+            "let doubled equal double element for each element in the list"
+        ],
+        [
+            "let dictionary sam to twenty two",
+            "dictionary sam equal twenty-two"
+        ],
+        [
+            "{define a function} greet {that takes} {one} {argument} name",
+            "function greet one argument name"
+        ],
+        [
+            "{print} hello space name",
+            "print hello space name"
+        ]
     ]
 }

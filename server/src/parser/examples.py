@@ -29,6 +29,7 @@ def read_synonyms(filepath: Path) -> List[List[str]]:
 
 
 SYNONYMS = read_synonyms(VERSIONED_DATA_DIR / "synonyms.csv")
+print(sum(map(len, SYNONYMS)))
 
 
 # UTIL
@@ -108,7 +109,7 @@ class Template:
         other_args = {key: val for key, val in default_args.items() if key != first_arg}
 
         for word_synonyms in synonyms:
-            if word_synonyms[0] == first_arg:  # only compare first synonym as "trutH"
+            if word_synonyms[0] == first_arg:  # only compare first synonym as "truth"
                 break
             elif first_arg in word_synonyms:
                 logger.warning(
@@ -137,9 +138,13 @@ def read_examples(filepath: Path) -> Iterator[Example]:
 
 def read_templates(filepath: Path) -> List[Template]:
     with open(filepath) as file:
-        examples = json.load(file)["templates"]
+        contents = json.load(file)
 
-    return [Template.parse(template, result) for template, result in examples]
+    templates = (
+        contents["templates"] + contents["sam-templates"] + contents["anmol-templates"]
+    )
+
+    return [Template.parse(template, result) for template, result in templates]
 
 
 def make_examples(templates: List[Template]) -> Iterator[Example]:
@@ -152,10 +157,14 @@ def main() -> None:
 
     templates = read_templates(template_file)
 
-    examples = {"examples": [e.dump() for e in make_examples(templates)]}
+    examples = list(make_examples(templates))
+
+    print(len(examples))
+
+    example_json = {"examples": [e.dump() for e in examples]}
 
     with open(examples_file, "w") as file:
-        json.dump(examples, file, indent=2)
+        json.dump(example_json, file, indent=2)
 
 
 if __name__ == "__main__":
