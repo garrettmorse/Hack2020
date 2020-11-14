@@ -62,7 +62,7 @@ class RuleEngine:
 
     @classmethod
     def consume_many(self, tokens, number):
-        return tokens[1 + number :]
+        return tokens[1 + number:]
 
     def parse(self, text: str):
         tokens = text.strip().split(" ")
@@ -91,14 +91,8 @@ class RuleEngine:
         return f"def {name}({paramstr}):\n"
 
     def parse_function(self, tokens: List[str]):
-        arg_i = -1
-        and_i = -1  # Assume only 1 "and" per definition
-        for i, t in enumerate(tokens):
-            if t == "argument" or t == "arguments":
-                arg_i = i
-            if t == "and":
-                and_i = i
-
+        arg_i, _ = self.find_next_specific(tokens, SecondaryKeywords.ARGUMENT)
+        and_i, _ = self.find_next_specific(tokens, SecondaryKeywords.AND)
         num_args = self.nums[tokens[arg_i-1]]
         params = ["" for i in range(num_args)]
         func_name = "_".join(tokens[1:arg_i-2])

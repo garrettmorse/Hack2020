@@ -24,7 +24,6 @@ class PrimaryKeywords(enum.Enum):
 
 class SecondaryKeywords(enum.Enum):
     ARGUMENT = "argument"
-    ARGUMENTS = "arguments"
     PLUS = "plus"
     MINUS = "minus"
     TIMES = "times"
