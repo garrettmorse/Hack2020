@@ -7,11 +7,12 @@ import json
 import logging
 import os
 import random
+import re
 import string
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, TypeVar
-
+import itertools
 from . import disk
 
 T = TypeVar("T")
@@ -33,6 +34,17 @@ def read_synonyms(filepath: Path) -> List[List[str]]:
 SYNONYMS = read_synonyms(disk.VERSIONED_DATA_DIR / "synonyms.csv")
 print(sum(map(len, SYNONYMS)))
 
+VARIABLES = read_synonyms(disk.VERSIONED_DATA_DIR / "variables.csv")
+print(len(VARIABLES))
+
+int_pattern = re.compile("\$int\d+")
+string_pattern = re.compile("\$string\d+")
+list_pattern = re.compile("\$list\d+")
+bool_pattern = re.compile("\$bool\d+")
+path_pattern = re.compile("\$path\d+")
+
+
+PATTERNS = [int_pattern, string_pattern, list_pattern, bool_pattern, path_pattern]
 
 # UTIL
 
@@ -54,6 +66,31 @@ class Example:
 
     def dump(self) -> Dict[str, str]:
         return {"utterance": self.utterance.strip(), "code": " ".join(self.result)}
+
+    def expand(self) -> "Iterator[Example]":
+        """
+        Expands all $bool, $int, etc with possible values from variables.csv
+        """
+
+        if '$' not in self.utterance:
+            yield self
+            return
+
+        for pattern, variables in zip(PATTERNS, VARIABLES):
+            matches = re.findall(pattern, self.utterance)
+            if not matches:
+                continue
+        
+            for match in matches:
+                for var in variables[1:]: # skip first one
+                    for e in Example(self.utterance.replace(match, var), " ".join(self.result).replace(match, var).split()).expand():
+                        yield e
+
+    def __hash__(self):
+        return hash(repr(self))
+            
+        
+                
 
 
 @dataclass
@@ -133,7 +170,11 @@ def read_templates(filepath: Path) -> List[Template]:
 
 
 def make_examples(templates: List[Template]) -> Iterator[Example]:
-    return flatten([template.generate(SYNONYMS) for template in templates])
+    unexpanded = flatten([template.generate(SYNONYMS) for template in templates])
+
+    expanded =  [e.expand() for e in unexpanded]
+
+    return itertools.chain(*expanded)
 
 
 def main() -> None:
@@ -141,28 +182,12 @@ def main() -> None:
 
     templates = read_templates(template_file)
 
-    examples = list(make_examples(templates))
-
-    print(len(examples))
-
-    random.shuffle(examples)
-
-    train = examples[:-200]
-    validation = examples[-200:-100]
-    test = examples[-100:]
+    examples = make_examples(templates)
 
     os.makedirs(disk.VERSIONED_DATA_DIR / "generated", exist_ok=True)
 
-    with open(disk.VERSIONED_DATA_DIR / "generated" / "train.json", "w") as file:
-        for ex in train:
-            file.write(json.dumps(ex.dump()) + "\n")
-
-    with open(disk.VERSIONED_DATA_DIR / "generated" / "validation.json", "w") as file:
-        for ex in validation:
-            file.write(json.dumps(ex.dump()) + "\n")
-
-    with open(disk.VERSIONED_DATA_DIR / "generated" / "test.json", "w") as file:
-        for ex in test:
+    with open(disk.VERSIONED_DATA_DIR / "generated" / "examples.json", "w") as file:
+        for ex in examples:
             file.write(json.dumps(ex.dump()) + "\n")
 
 
@@ -170,9 +195,10 @@ if __name__ == "__main__":
     main()
 
     # t = Template(
-    #     "{append} result {to the end of} the product list",
-    #     "append result to product list".split(),
+    #     "{if} $bool1 {then} {return} $bool2",
+    #     "if $bool1 then return $bool2".split(),
     # )
 
-    # for e in t.generate(SYNONYMS):
+    # ex = t.generate(SYNONYMS)[0]
+    # for e in ex.expand():
     #     print(e)
