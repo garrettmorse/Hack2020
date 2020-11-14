@@ -30,7 +30,7 @@ def operations_redo():
 @app.route("/operations/undo", methods=["POST"])
 def operations_undo():
     state_engine.undo_history()
-    return {"code": state_engine.get_code(), "success": True}
+    return {"code": state_engine.print_code(), "success": True}
 
 
 @app.route("/operations/execute", methods=["POST"])
@@ -46,7 +46,7 @@ def operations_execute():
         sys.stdout, sys.stderr = code_out, code_err
 
         code_object = compile(
-            state_engine.get_code(),
+            state_engine.print_code(),
             "execute.py",
             "exec",
         )
@@ -76,10 +76,10 @@ def operations_process():
     # text = parser.predict(raw_text)
 
     # TODO: Feed raw_code into parse
-    new_code = rule_engine.parse(raw_text)
+    new_code = rule_engine.parse(state_engine.code, raw_text)
     state_engine.set_code(raw_code + new_code)
 
-    return {"code": state_engine.get_code(), "success": True}
+    return {"code": state_engine.print_code(), "success": True}
 
 
 # Main

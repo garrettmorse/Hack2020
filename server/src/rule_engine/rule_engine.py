@@ -1,9 +1,10 @@
 import sys
-from typing import List
+from typing import List, Any
 
 from typing_extensions import final
 from .keywords import PrimaryKeywords, SecondaryKeywords
 from .symbol import Symbol
+from ..state_engine import Code, Line
 
 
 class RuleEngine:
@@ -63,7 +64,7 @@ class RuleEngine:
     def consume_many(self, tokens, number):
         return tokens[1 + number :]
 
-    def parse(self, text: str):
+    def parse(self, code: Code, text: str) -> Code:
         tokens = text.strip().split(" ")
 
         parsed_tokens = []
@@ -76,9 +77,9 @@ class RuleEngine:
             else:
                 parsed_tokens.append(token)
 
-        return self.parse_core(tokens)
+        return self.parse_core(code, tokens)
 
-    def parse_core(self, tokens):
+    def parse_core(self, code: Code, tokens: List[Any]) -> Code:
         first = tokens[0]
         if first in PrimaryKeywords:
             return getattr(self, f"parse_{first.value}")(tokens)
