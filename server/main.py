@@ -28,9 +28,9 @@ def operations_update():
     return {"code": engine.stringify_and_get_code(), "success": True}
 
 
-@app.route("/operations/process", methods=["POST"])
-def operations_process():
-    return "Process user text (after speech processing)"
+@app.route("/data/code", methods=["GET"])
+def data_code():
+    return {"code": engine.stringify_and_get_code(), "success": True}
 
 
 @app.route("/operations/redo", methods=["POST"])
@@ -43,9 +43,9 @@ def operations_undo():
     return "Undoing user's last command sequence"
 
 
-@app.route("/data/code", methods=["GET"])
-def data_code():
-    return {"code": engine.stringify_and_get_code(), "success": True}
+@app.route("/operations/process", methods=["POST"])
+def operations_process():
+    return "Process user text (after speech processing)"
 
 
 # Main
