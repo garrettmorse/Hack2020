@@ -3,12 +3,7 @@ from typing import List
 
 from typing_extensions import final
 from .keywords import PrimaryKeywords, SecondaryKeywords
-
-
-class Symbol:
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
+from .symbol import Symbol
 
 
 class RuleEngine:
@@ -225,7 +220,7 @@ class RuleEngine:
             x1 = find_best_match(x1)
             x2 = find_best_match(x2)
             """
-            code_rep.append(f"for {iter_var} in range(x1, x2):\n")
+            code_rep.append(f"for {iter_var} in range({x1}, {x2}):\n")
         else:
             col = "_".join(tokens[in_i + 1 :])
             # col = find_best_match(col)

@@ -77,7 +77,7 @@ def operations_process():
     # text = parser.predict(raw_text)
 
     # TODO: Feed raw_code into parse
-    new_code = rule_engine.parse(text)
+    new_code = rule_engine.parse(raw_text)
     state_engine.set_code(raw_code + new_code)
 
     return {"code": state_engine.get_code(), "success": True}
