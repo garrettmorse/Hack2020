@@ -37,6 +37,8 @@ class SecondaryKeywords(enum.Enum):
     AND = "and"
     OR = "or"
     TO = "to"
+    RANGE = "range"
+    IN = "in"
 
     @staticmethod
     def list_keys():
