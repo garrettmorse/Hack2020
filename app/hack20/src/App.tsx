@@ -1,26 +1,41 @@
 import React from 'react';
 import './App.css';
-import { Container, Divider, Grid, Header, Menu, Segment } from 'semantic-ui-react';
-import Editor from './components/Editor';
+import { Container, Divider, Grid, Header, Icon, Menu, Segment } from 'semantic-ui-react';
+import MyEditor from './components/Editor';
 import Listen from './components/Listen';
 import AppRoutes from './service/app-routes';
+import { sample } from './static/constants.json';
 
-class App extends React.Component<{}, { transcript: string, code: string, sample: string }> {
+class App extends React.Component<{}, { transcript: string, code: string, output: string }> {
   constructor(props: any) {
     super(props);
     this.sendRecording = this.sendRecording.bind(this);
     this.onTextChange = this.onTextChange.bind(this);
+    this.onOutputChange = this.onOutputChange.bind(this)
     this.state = {
       transcript: '',
-      code: '',
-      sample: "import os\nimport sys\n\n# Start talking to get started!\n#\n# If nothing comes to mind, here's a good example to get started...\n#   define a function helloworld that takes no arguments\n#   print helloworld\n"
+      code: sample,
+      output: ''
     }
   }
   sendRecording() {
-    AppRoutes.sendText(this.state.transcript)
+    const data = JSON.stringify({ transcript: this.state.transcript, code: this.state.code });
+    // console.log(`data being sent: ${data}`);
+    AppRoutes.sendText(data)
       .then(res => {
-        console.log(res);
-        alert(res);
+        this.onCodeChange(res.data);
+      })
+      .catch(e => {
+        console.log(e);
+        alert(e);
+      })
+  }
+
+  execCode() {
+    const data = JSON.stringify(this.state.code);
+    AppRoutes.sendText(data)
+      .then(res => {
+        this.onOutputChange(res.data);
       })
       .catch(e => {
         console.log(e);
@@ -30,6 +45,17 @@ class App extends React.Component<{}, { transcript: string, code: string, sample
 
   onTextChange(newText: string) {
     this.setState({ ...this.state, transcript: newText });
+    // console.log(`update state.transcript: ${this.state.transcript}`);
+  }
+
+  onCodeChange(newCode: string) {
+    this.setState({ ...this.state, code: newCode });
+    // console.log(`update state.code: ${this.state.code}`);
+  }
+
+  onOutputChange(newOutput: string) {
+    this.setState({ ...this.state, output: newOutput });
+    // console.log(`update state.output: ${this.state.output}`);
   }
 
   render() {
@@ -49,11 +75,11 @@ class App extends React.Component<{}, { transcript: string, code: string, sample
 
                 <Grid.Column>
                   <Header as='h3'>Code</Header>
-                  <Editor text={this.state.sample} />
+                  <MyEditor onCodeChange={this.onCodeChange.bind(this)} code={this.state.code} />
                 </Grid.Column>
               </Grid>
 
-              <Divider vertical>==&gt;</Divider>
+              <Divider vertical><Icon name='long arrow alternate right' /></Divider>
             </Segment>
             <Container>
               <Header as='h3'>Output</Header>

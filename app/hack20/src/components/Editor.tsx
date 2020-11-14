@@ -1,19 +1,11 @@
 import React from 'react';
 import { Button, Container, Icon } from 'semantic-ui-react';
 import AceEditor from 'react-ace';
-import 'brace/mode/python';
+import 'ace-builds/src-min-noconflict/mode-python';
+import 'ace-builds/src-min-noconflict/theme-github';
 
-const onChange = (newValue: string) => {
-    console.log(newValue);
-}
 
-class Editor extends React.Component<{ text: string }, { text: string }>{
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            text: props.text
-        };
-    }
+class MyEditor extends React.Component<any, any> {
     componentDidMount() {
         const reactAceComponent = this.refs.reactAceComponent;
         console.log(reactAceComponent);
@@ -24,14 +16,15 @@ class Editor extends React.Component<{ text: string }, { text: string }>{
             <Container>
                 <Button icon labelPosition='left' >
                     <Icon name='play' />
-    Run
-    </Button>
+                    Run
+                </Button>
                 <AceEditor
-                    value={this.state.text}
+                    value={this.props.code}
                     style={{ marginTop: 5 }}
                     mode='python'
-                    onChange={onChange}
+                    onChange={this.props.onCodeChange}
                     editorProps={{ $blockScrolling: true }}
+                    width='100%'
                     setOptions={{
                         enableBasicAutocompletion: true,
                         enableLiveAutocompletion: true,
@@ -44,4 +37,4 @@ class Editor extends React.Component<{ text: string }, { text: string }>{
 }
 
 
-export default Editor
+export default MyEditor
