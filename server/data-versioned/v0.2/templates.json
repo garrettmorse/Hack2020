@@ -1,0 +1,292 @@
+{
+    "templates": [
+        [
+            "{if} $bool1 {then} {return} $bool2",
+            "if $bool1 then return $bool2"
+        ],
+        [
+            "{define a function} {that takes} {a pair of} {argument}s $int1 and $int2",
+            "function [FUNC] two arguments $int1 and $int2"
+        ],
+        [
+            "{define a function} {that takes} three {argument}s $int1 a and c",
+            "function [FUNC] three arguments $int1 a and c"
+        ],
+        [
+            "{return} {the result of} {the sum of $int1 and x}",
+            "return $int1 plus x"
+        ],
+        [
+            "{print} {the result of} {the sum of $int1 and x}",
+            "call print a plus x"
+        ],
+        [
+            "{return} {the result of} {my variable minus their variable}",
+            "return my variable minus their variable"
+        ],
+        [
+            "{print} {the result of} {file length times file size}",
+            "call print file length times file size"
+        ],
+        [
+            "{for each} line {from} all lines",
+            "for each line in all lines"
+        ],
+        [
+            "{for each} {character} {from} the $string1",
+            "for each char in $string1"
+        ],
+        [
+            "double {each} {element} {from} the $list1",
+            "map double $list1"
+        ],
+        [
+            "{call} triple on {each} {element} {from} the $list1",
+            "map triple $list1"
+        ],
+        [
+            "{if} a {is greater than} c {then} {call} f {with} {argument}s a and b {else} {call} f with {argument}s b and c",
+            "if a greater than c then call f a b else call f b c"
+        ],
+        [
+            "{if} a {is greater than} c {then} {return} a {else} {return} c",
+            "if a greater than c then return a else return c"
+        ],
+        [
+            "{print} all lines",
+            "call print all lines"
+        ],
+        [
+            "{define a function} fibonacci {that takes} {one} {argument} n",
+            "function fibonacci one argument n"
+        ],
+        [
+            "{if} n {is less than} two {then} {return} n",
+            "if n less than two then return n"
+        ],
+        [
+            "{else} recursively {call} f {with} $int1 minus one and $int1 minus {two} and return the result",
+            "else return call f $int1 minus 1 $int1 minus 2"
+        ],
+        [
+            "{else} {return} {call} f {with} n minus one and n minus {two}",
+            "else return f n minus one n minus two"
+        ],
+        [
+            "{if} d {is in} the string {then} {print} string",
+            "if d in string then call print string"
+        ],
+        [
+            "{if} the string {contains} d {then} {print} string",
+            "if string contains d then call print string"
+        ],
+        [
+            "{take the average} of variable one and variable {two}",
+            "mean variable one and variable two"
+        ],
+        [
+            "store {the result of} {calling} f {with} x in y",
+            "set y to f x"
+        ],
+        [
+            "{let} $int1 {equal} {the result of} {calling} double {with} $int2",
+            "set $int1 to double $int2"
+        ],
+        [
+            "{let} product discount {equal} {my variable minus their variable}",
+            "set product discount to my variable minus their variable"
+        ],
+        [
+            "{append} $string1 {to the end of} the product list",
+            "append $string1 to product list"
+        ],
+        [
+            "{prepend} $string1 {at the front of} the product list",
+            "prepend $string1 to product list"
+        ]
+    ],
+    "anmol-templates": [
+        [
+            "{define a function} hello world {that}",
+            "function hello world zero arguments"
+        ],
+        [
+            "prints hello world",
+            "call print hello world"
+        ],
+        [
+            "{define a function} {that takes} two {argument}s dictionary n and string input",
+            "function [FUNC] two arguments n input"
+        ],
+        [
+            "returns input in n if n {is in} input {else} zero",
+            "return n input if n in input else zero"
+        ],
+        [
+            "{define a function} read from file {that takes} {argument} string $path1",
+            "function read from $path1 one argument filename"
+        ],
+        [
+            "with open $path1 as fin",
+            "with open $path1 as fin"
+        ],
+        [
+            "{return} fin read all lines",
+            "return fin read all lines"
+        ],
+        [
+            "{return} fin read {each} line",
+            "return fin read all lines"
+        ],
+        [
+            "{call} print on everything in cities",
+            "for element in city call print city"
+        ],
+        [
+            "{call} print on {each} {element} in cities",
+            "for element in city call print city"
+        ],
+        [
+            "{define a function} {that takes} $string1",
+            "function [FUNC] one argument $string1"
+        ],
+        [
+            "{return} hi plus $string1",
+            "return hi plus $string1"
+        ],
+        [
+            "{print} $int1",
+            "call print $int1"
+        ]
+    ],
+    "sam-templates": [
+        [
+            "{define a function} hello",
+            "function hello zero arguments"
+        ],
+        [
+            "{print} hello world",
+            "call print hello world"
+        ],
+        [
+            "{define a function} {named} is palindrome {that takes} one {argument} {named} s",
+            "function is palindrome one argument s"
+        ],
+        [
+            "{let} reversed {equal} s followed by open bracket colon colon negative one close bracket",
+            "reversed equals s open bracket colon colon negative one close bracket"
+        ],
+        [
+            "{return} reversed equals s",
+            "return reversed equals s"
+        ],
+        [
+            "{define a function} fibonacci {that takes} one {argument} n",
+            "function fibonacci one argument s"
+        ],
+        [
+            "{if} n {is less than} or equal to {two}",
+            "if n less than or equal two"
+        ],
+        [
+            "{return} n",
+            "return n"
+        ],
+        [
+            "{else}",
+            "else"
+        ],
+        [
+            "{return} fibonacci of n minus one plus fibonacci of n minus two",
+            "return fibonacci n minus one plus fibonacci n minus two"
+        ],
+        [
+            "with open $path1 as file",
+            "with open $path1 as file"
+        ],
+        [
+            "{print} file dot read",
+            "call print file dot read"
+        ],
+        [
+            "{let} doubled {equal} {the result of} applying double to {each} {element} {from} the list",
+            "let doubled equal double element for element in the list"
+        ],
+        [
+            "let dictionary sam to twenty two",
+            "dictionary sam equal twenty-two"
+        ],
+        [
+            "{define a function} {named} greet {that takes} {one} {argument} {named} $string1",
+            "function greet one argument $string1"
+        ],
+        [
+            "{print} hello space name",
+            "call print hello space name"
+        ]
+    ],
+    "jason-templates": [
+        [
+            "{define a function} {named} hello world",
+            "define function hello world zero arguments"
+        ],
+        [
+            "{print} the string hello world",
+            "call print string hello world"
+        ],
+        [
+            "{let} x one {equal} one",
+            "set x one to one"
+        ],
+        [
+            "{let} x two {equal} one",
+            "set x two to one"
+        ],
+        [
+            "{let} x three {equal} x two",
+            "set x three to x two"
+        ],
+        [
+            "for $int1 {starting at} one {going to} one hundred",
+            "for $int1 in range one to one hundred"
+        ],
+        [
+            "for $int1 {starting at} $int2 {going to} $int3",
+            "for $int1 in range $int1 to $int3"
+        ],
+        [
+            "{print} x one",
+            "call print x one"
+        ],
+        [
+            "x three equals x two",
+            "set x three to x two"
+        ],
+        [
+            "x two equals x one plus x two",
+            "set x two to x one plus x two"
+        ],
+        [
+            "$int1 equals $int2",
+            "set $int1 to $int2"
+        ],
+        [
+            "define $list1 as a list of integers {starting at} one {going to} ten",
+            "set $list1 to range one to ten"
+        ],
+        [
+            "multiply {each} {element} in x by 10",
+            "call multiply element 10 for element in x"
+        ]
+    ],
+    "missed-templates": [
+        [
+            "{define a function} with no {argument}s",
+            "function [FUNC] zero arguments"
+        ],
+        [
+            "{define a function} hello world {argument} $int1",
+            "function hello world one argument $int1"
+        ]
+    ]
+}

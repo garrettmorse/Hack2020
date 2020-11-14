@@ -1,0 +1,8 @@
+.vscode/
+venv/
+.mypy_cache/
+.DS_Store
+__pycache__
+data-unversioned/
+logs/
+models/
