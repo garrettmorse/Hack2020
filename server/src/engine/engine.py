@@ -12,25 +12,25 @@ class Engine:
         self.history = []
         self.history_pos = -1
 
-    def stringify_code(self, raw: Optional[str] = None) -> str:
-        raw = raw if raw else self.code
-        return "".join(raw)
+    @classmethod
+    def stringify_code(self, code: List[str]) -> str:
+        return "".join(code)
 
-    def parse_code(self, raw: Optional[str]) -> str:
-        raw = raw if raw else self.code
+    @classmethod
+    def parse_code(self, raw_code: str) -> List[str]:
         replace_dict = {"    ": "\t", "\r\n": "\n"}
         for k, v in replace_dict.items():
-            raw = raw.replace(k, v)
-        lines = raw.split("\n")
+            raw_code = raw_code.replace(k, v)
+        lines = raw_code.split("\n")
         code = [line + "\n" for line in lines]
         return code
 
-    def set_code(self, raw_code):
-        self.code = self.parse_code(raw_code)
+    def set_code(self, raw_code: str):
+        self.code = Engine.parse_code(raw_code)
         self.save_history()
 
     def get_code(self):
-        return self.code
+        return Engine.stringify_code(self.code)
 
     def get_state(self) -> Dict[str, Any]:
         return {"code": self.code}
