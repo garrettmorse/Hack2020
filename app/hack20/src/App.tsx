@@ -21,11 +21,11 @@ class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean
   sendRecording = (finalScript: string) => {
     const data = JSON.stringify({ transcript: finalScript, code: this.state.code });
     console.log(`recording being sent: ${data}`);
-    this.setState({ ...this.state, sendLoader: true });
+    this.setState({ sendLoader: true });
     AppRoutes.sendText(data)
       .then(res => {
         this.onCodeChange(res.data);
-        this.setState({ ...this.state, sendLoader: false });
+        this.setState({ sendLoader: false });
       })
       .catch(e => {
         console.log(e);
@@ -36,12 +36,13 @@ class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean
   execCode = () => {
     const data = JSON.stringify({ code: this.state.code });
     console.log(`code being sent: ${data}`);
-    this.setState({ ...this.state, execLoader: true });
-    AppRoutes.sendText(data)
+    this.setState({ execLoader: true });
+    AppRoutes.execCode(data)
       .then(async res => {
         // await this.sleep(2000);
+        console.log(res);
         this.onOutputChange(res.data.output);
-        this.setState({ ...this.state, execLoader: false });
+        this.setState({ execLoader: false });
       })
       .catch(e => {
         console.log(e);
@@ -50,18 +51,18 @@ class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean
   }
 
   onTextChange = (newText: string) => {
-    this.setState({ ...this.state, transcript: newText });
+    this.setState({ transcript: newText });
     // console.log(`update state.transcript: ${ this.state.transcript }`);
   }
 
   onCodeChange = (newCode: string) => {
-    this.setState({ ...this.state, code: newCode });
-    // console.log(`update state.code: ${ this.state.code }`);
+    this.setState({ code: newCode });
+    console.log(`update state.code: ${this.state.code}`);
   }
 
   onOutputChange = (newOutput: string) => {
-    this.setState({ ...this.state, output: newOutput });
-    // console.log(`update state.output: ${ this.state.output }`);
+    this.setState({ output: newOutput });
+    console.log(`update state.output: ${this.state.output}`);
   }
 
   sleep(ms: any) {
@@ -75,32 +76,34 @@ class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean
         </div>
         <div>
           <Segment>
-            <Segment>
-              <Grid columns={2} >
-                <Grid.Column>
-                  <Header as='h3'>Record Speech</Header>
+            <Grid columns={2} >
+              <Grid.Column>
+                <Header as='h3'>Code</Header>
+                <MyEditor loading={this.state.execLoader}
+                  handleCode={this.execCode.bind(this)}
+                  onCodeChange={this.onCodeChange.bind(this)}
+                  code={this.state.code} />
+              </Grid.Column>
+              <Grid.Column>
+                <Container style={{ height: '40%' }}>
+                  <Header as='h3'>Output</Header>
+                  <span style={{ whiteSpace: 'pre-line' }}>{this.state.output}</span>
+                  {/* <Output output={this.state.output} /> */}
+                </Container>
+                <Divider horizontal />
+                <Container>
                   <Listen executeCode={this.execCode}
                     loading={this.state.sendLoader}
                     onTextChange={this.onTextChange}
+                    onCodeChange={this.onCodeChange}
                     text={this.state.transcript}
                     handleRecording={this.sendRecording.bind(this)} />
-                </Grid.Column>
+                </Container>
+              </Grid.Column>
+            </Grid>
 
-                <Grid.Column>
-                  <Header as='h3'>Code</Header>
-                  <MyEditor loading={this.state.execLoader}
-                    handleCode={this.execCode.bind(this)}
-                    onCodeChange={this.onCodeChange.bind(this)}
-                    code={this.state.code} />
-                </Grid.Column>
-              </Grid>
+            <Divider vertical><Icon name='long arrow alternate right' /></Divider>
 
-              <Divider vertical><Icon name='long arrow alternate right' /></Divider>
-            </Segment>
-            <Container active>
-              <Header as='h3'>Output</Header>
-              <Output output={this.state.output} />
-            </Container>
           </Segment>
         </div>
       </div >
