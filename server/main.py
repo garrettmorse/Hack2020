@@ -21,16 +21,16 @@ def status():
 @app.route("/operations/update", methods=["POST"])
 def operations_update():
     body = request.json
-    code = body.get("code", None)
-    if not code:
+    raw_code = body.get("code", None)
+    if not raw_code:
         return {"success": False}
-    engine.parse_and_set_code(code)
-    return {"code": engine.stringify_and_get_code(), "success": True}
+    engine.code = engine.parse_code(raw_code)
+    return {"code": engine.stringify_code(), "success": True}
 
 
 @app.route("/data/code", methods=["GET"])
 def data_code():
-    return {"code": engine.stringify_and_get_code(), "success": True}
+    return {"code": engine.stringify_code(), "success": True}
 
 
 @app.route("/operations/redo", methods=["POST"])
@@ -45,7 +45,10 @@ def operations_undo():
 
 @app.route("/operations/process", methods=["POST"])
 def operations_process():
-    return "Process user text (after speech processing)"
+    body = request.json
+    text = body.get("text", None)
+    print(text)
+    return {"code": engine.stringify_code(), "success": True}
 
 
 # Main
