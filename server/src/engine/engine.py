@@ -1,5 +1,5 @@
 import sys
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 default_code_path = "./src/engine/default_code.py"
 
@@ -10,7 +10,7 @@ class Engine:
             raw_code = fin.readlines()
             self.code = self.parse_code(self.stringify_code(raw_code))
         self.history = []
-        self.history_pointer = -1
+        self.history_pos = -1
 
     def stringify_code(self, raw: Optional[str] = None) -> str:
         raw = raw if raw else self.code
@@ -25,12 +25,26 @@ class Engine:
         code = [line + "\n" for line in lines]
         return code
 
-    def save_history(self, code):
-        self.history = self.history[: self.history_pointer + 1]
-        self.history.append(code)
-        self.history_pointer = len(self.history) - 1
+    def set_code(self, raw_code):
+        self.code = self.parse_code(raw_code)
+        self.save_history()
 
-    def undo(self, code):
-        if self.history_pointer > 0:
-            self.history_pointer -= 1
-        return self.history[self.history_pointer]
+    def get_code(self):
+        return self.code
+
+    def get_state(self) -> Dict[str, Any]:
+        return {"code": self.code}
+
+    def set_state(self, state: Dict[str, Any]):
+        self.code = state["code"]
+
+    def save_history(self):
+        self.history = self.history[: self.history_pos + 1]
+        self.history.append(self.get_state())
+        self.history_pos = len(self.history) - 1
+
+    def undo_history(self):
+        if self.history_pos > 0:
+            self.history_pos -= 1
+        state = self.history[self.history_pos]
+        self.set_state(state)

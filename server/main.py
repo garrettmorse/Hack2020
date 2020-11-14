@@ -24,23 +24,24 @@ def operations_update():
     raw_code = body.get("code", None)
     if not raw_code:
         return {"success": False}
-    engine.code = engine.parse_code(raw_code)
-    return {"code": engine.stringify_code(), "success": True}
+    engine.set_code(raw_code)
+    return {"code": engine.get_code(), "success": True}
 
 
 @app.route("/data/code", methods=["GET"])
 def data_code():
-    return {"code": engine.stringify_code(), "success": True}
+    return {"code": engine.get_code(), "success": True}
 
 
 @app.route("/operations/redo", methods=["POST"])
 def operations_redo():
-    return "Redoing user's undo"
+    return "NOT IMPLEMENTED EXCEPTION"
 
 
 @app.route("/operations/undo", methods=["POST"])
 def operations_undo():
-    return "Undoing user's last command sequence"
+    engine.undo_history()
+    return {"code": engine.get_code(), "success": True}
 
 
 @app.route("/operations/process", methods=["POST"])
@@ -48,7 +49,8 @@ def operations_process():
     body = request.json
     text = body.get("text", None)
     print(text)
-    return {"code": engine.stringify_code(), "success": True}
+    print("NOT IMPLEMENTED EXCEPTION")
+    return {"code": engine.get_code(), "success": True}
 
 
 # Main
