@@ -6,7 +6,3 @@ import sys
 # If nothing comes to mind, here's a good example to get started...
 #    define a function helloworld that takes no arguments
 #    print helloworld
-
-
-def helloworld():
-    print("helloworld")
