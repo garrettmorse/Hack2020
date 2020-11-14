@@ -3,11 +3,15 @@ import http from './http-common';
 class AppRoutes {
 
     sendText(data: any) {
-        return http.post(`/text`, data);
+        return http.post(`/operations/process`, data);
     }
 
-    sendCode(data: any) {
-        return http.post(`/code`, data);
+    execCode(data: any) {
+        return http.post(`/operations/execute`, data);
+    }
+
+    getCode() {
+        return http.get(`/data/code`);
     }
 }
 

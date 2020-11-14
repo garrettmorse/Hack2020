@@ -2,20 +2,23 @@ import React from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { Button, Container } from 'semantic-ui-react';
 
-const Listen = () => {
+const Listen = (props: any) => {
     const { transcript, resetTranscript } = useSpeechRecognition();
 
-    function hello() {
-        return 'nope';
-    }
     return (
         <Container>
             <Button onClick={() => SpeechRecognition.startListening()}>Record</Button>
-            <Button onClick={SpeechRecognition.stopListening}>Send</Button>
-            <Button onClick={resetTranscript}>Clear</Button>
-            <Container>
-                <p>{transcript}</p>
-            </Container>
+            <Button onClick={() => {
+                props.onTextChange(transcript);
+                props.handleRecording();
+            }
+            }>Send</Button>
+            <Button onClick={() => {
+                resetTranscript();
+                props.onTextChange(transcript);
+            }
+            }>Clear</Button>
+            <p>{transcript}</p>
         </Container>
     )
 }
