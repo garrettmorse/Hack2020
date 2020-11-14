@@ -1,5 +1,4 @@
-import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 default_code_path = "./src/state_engine/default_code.py"
 
@@ -26,11 +25,11 @@ class StateEngine:
         return code
 
     def set_code(self, raw_code: str):
-        self.code = Engine.parse_code(raw_code)
+        self.code = StateEngine.parse_code(raw_code)
         self.save_history()
 
     def get_code(self):
-        return Engine.stringify_code(self.code)
+        return StateEngine.stringify_code(self.code)
 
     def get_state(self) -> Dict[str, Any]:
         return {"code": self.code}
