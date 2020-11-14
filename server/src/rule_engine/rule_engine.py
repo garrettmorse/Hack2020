@@ -90,7 +90,7 @@ class RuleEngine:
         paramstr = ", ".join(params)
         return f"def {name}({paramstr}):\n"
 
-    def parse_function(self, tokens: List[str]):
+    def parse_function(self, tokens: List[str]) -> List[str]:
         arg_i, _ = self.find_next_specific(tokens, SecondaryKeywords.ARGUMENT)
         and_i, _ = self.find_next_specific(tokens, SecondaryKeywords.AND)
         num_args = self.nums[tokens[arg_i-1]]
@@ -105,9 +105,9 @@ class RuleEngine:
             params[j] = tokens[j]
         params[j] = tokens[j:].join("_")
 
-        self.symbols[func_name: Symbol(func_name, dict("type": "function", "params": params, "num_params": len(params)))]
+        self.symbols[func_name: Symbol(func_name, dict("type": "function", "params": params, "num_params": len(params))]
 
-        return _build_func_definition(func_name, params)
+        return [self._build_func_definition(func_name, params)]
 
     def parse_call(self, tokens):
         pass
@@ -118,8 +118,47 @@ class RuleEngine:
     def parse_then(self, tokens):
         pass
 
-    def parse_if(self, tokens):
-        pass
+    def parse_if(self, tokens: List[str]) -> List[str]:
+        """
+        IF boolean expression THEN action .../ELSE boolean expressions THEN action
+        """
+        code_rep=[]
+        tokens=tokens[1:]
+        then_i, _=self.find_next_specific(tokens, SecondaryKeywords.THEN)
+        expr_tokens=tokens[:then_i]
+        expr_str=self.parse_core(expr_tokens)
+        code_rep.append(f"if {expr_str}:\n")
+        tokens=tokens[then_i+1:]
+
+        else_i, _=self.find_next_specific(tokens, PrimaryKeywords.ELSE)
+        if else_i == -1:
+            code_rep.append("\t" + self.parse_core(tokens))
+            tokens=[]
+        else:
+            code_rep.append("\t" + self.parse_core(tokens[:else_i]))
+            tokens=tokens[else_i + 1:]
+
+
+        while not self.is_EOS(tokens):
+            then_i, _=self.find_next_specific(tokens, SecondaryKeywords.THEN)
+            # Assume final else: ELSE THEN action
+            expr_tokens=tokens[:then_i]
+            if tokens:
+                expr_str=self.parse_core(expr_tokens)
+                code_rep.append(f"else {expr_str}:\n")
+            else:
+                code_rep.append("else:\n")
+
+            tokens=tokens[then_i+1:]
+            else_i, _=self.find_next_specific(tokens, PrimaryKeywords.ELSE)
+            if else_i == -1:
+                code_rep.append("\t" + self.parse_core(tokens))
+                tokens=[]
+            else:
+                code_rep.append("\t" + self.parse_core(tokens[:else_i]))
+                tokens=tokens[else_i + 1:]
+
+        return code_rep
 
     def parse_else(self, tokens):
         pass

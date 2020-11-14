@@ -5,7 +5,6 @@ class PrimaryKeywords(enum.Enum):
     FUNCTION = "function"
     CALL = "call"
     RETURN = "return"
-    THEN = "then"
     IF = "if"
     ELSE = "else"
     SET = "set"
