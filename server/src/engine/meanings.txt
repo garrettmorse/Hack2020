@@ -1,0 +1,19 @@
+function
+argument/arguments
+return
+plus
+minus
+times
+greater than
+less than
+dot -> 
+then -> go to next line
+call -> precedes function call
+else -> else
+if -> if
+set .x to .y -> x = y
+and -> and
+or -> or
+append .x to .list -> lists only
+prepend .x to .list -> lists only
+.num arguments -> count the last .num arguments as arguments to the function
