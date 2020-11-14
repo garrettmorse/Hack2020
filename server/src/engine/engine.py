@@ -11,6 +11,7 @@ class Engine:
             self.code = self.parse_code(self.stringify_code(raw_code))
         self.history = []
         self.history_pos = -1
+        self.rule_engine = RuleEngine()
 
     @classmethod
     def stringify_code(self, code: List[str]) -> str:
