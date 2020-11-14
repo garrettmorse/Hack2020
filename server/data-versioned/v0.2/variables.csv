@@ -1,0 +1,5 @@
+$int,a,b,x,y,i
+$string,string,name,field,contents,key
+$list,results,args,contents
+$bool,true,false
+$path,filename,filepath,name,path

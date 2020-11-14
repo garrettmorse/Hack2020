@@ -1,0 +1,100 @@
+{"utterance": "if a more than c then execute f using params a and b else execute f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "give me a function fibonacci that takes in one argument n", "code": "function fibonacci one argument n"}
+{"utterance": "if a more than c just execute f with params a and b if not execute f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a is bigger than c just invoke f using args a and b else invoke f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a more than c do evaluate f using arguments a and b if not evaluate f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a is above c then execute f using parameters a and b else execute f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a bigger than c do evaluate f using params a and b otherwise evaluate f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a is greater than c then call f with params a and b otherwise call f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "tell me  a plus b", "code": "call print a plus b"}
+{"utterance": "when a is more than c just invoke f using args a and b if not invoke f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a is more than c then execute f passing parameters a and b else execute f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if d in the string do display string", "code": "if d in string then call print string"}
+{"utterance": "when true do return false", "code": "if true then return false"}
+{"utterance": "if a is bigger than c do just return a otherwise just return c", "code": "if a greater than c then return a else return c"}
+{"utterance": "let there be a function fibonacci that takes a single param n", "code": "function fibonacci one argument n"}
+{"utterance": "if a more than c just execute f with args a and b otherwise execute f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a is bigger than c just execute f passing parameters a and b otherwise execute f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "define a function read from file that has param string filename", "code": "function read from file one argument filename"}
+{"utterance": "if a is greater than c just execute f using params a and b if not execute f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when the string contains d do display string", "code": "if string contains d then call print string"}
+{"utterance": "let there be a function read from file that takes argument string filename", "code": "function read from file one argument filename"}
+{"utterance": "create a function fibonacci that takes one arg n", "code": "function fibonacci one argument s"}
+{"utterance": "when a greater than c then invoke f using params a and b else invoke f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "define variable y be equal to the result of executing double passing x", "code": "set y to double x"}
+{"utterance": "if a is larger than c do evaluate f with parameters a and b else evaluate f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a is above c do return a else return c", "code": "if a greater than c then return a else return c"}
+{"utterance": "if a larger than c do evaluate f using parameters a and b otherwise evaluate f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a is larger than c then invoke f using params a and b if not invoke f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a is larger than c then evaluate f using params a and b if not evaluate f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "tell me hello space name", "code": "call print hello space name"}
+{"utterance": "define a function with two args dictionary n and string input", "code": "function [FUNC] two arguments n input"}
+{"utterance": "make a function that takes two parameters a and b", "code": "function [FUNC] two arguments a and b"}
+{"utterance": "when a is bigger than c just invoke f using params a and b if not invoke f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a more than c then evaluate f using parameters a and b otherwise evaluate f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a is greater than c just evaluate f passing arguments a and b if not evaluate f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a is bigger than c just call f with params a and b else call f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a is greater than c then evaluate f with arguments a and b otherwise evaluate f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a is larger than c then invoke f with args a and b else invoke f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "give me a function fibonacci with one param n", "code": "function fibonacci one argument s"}
+{"utterance": "if a is larger than c just evaluate f with arguments a and b if not evaluate f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "define a function fibonacci that takes one param n", "code": "function fibonacci one argument n"}
+{"utterance": "doubled be equal to  applying double to every element in the list", "code": "let doubled equal double element for each element in the list"}
+{"utterance": "if a is greater than c do call f with args a and b otherwise call f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "define a function that takes two parameters dictionary n and string input", "code": "function [FUNC] two arguments n input"}
+{"utterance": "doubled be equal to  applying double to every element from the list", "code": "let doubled equal double element for each element in the list"}
+{"utterance": "define a function having two params a and b", "code": "function [FUNC] two arguments a and b"}
+{"utterance": "new function fibonacci that has a single arg n", "code": "function fibonacci one argument n"}
+{"utterance": "if a is more than c just evaluate f using args a and b if not evaluate f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a is above c just just return a else just return c", "code": "if a greater than c then return a else return c"}
+{"utterance": "when a is above c do call f using args a and b if not call f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if not just return evaluate f passing n minus one and n minus two", "code": "else return f n minus one n minus two"}
+{"utterance": "when a greater than c just call f with parameters a and b otherwise call f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a is above c then call f passing arguments a and b otherwise call f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a greater than c do call f using arguments a and b else call f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if not just return evaluate f using n minus one and n minus two", "code": "else return f n minus one n minus two"}
+{"utterance": "when a is larger than c do call f with args a and b otherwise call f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "doubled be equal to  applying double to every part from the list", "code": "let doubled equal double element for each element in the list"}
+{"utterance": "if a more than c do invoke f passing parameters a and b otherwise invoke f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "make a new variable product discount equal the difference between my variable and their variable", "code": "set product discount to my variable minus their variable"}
+{"utterance": "if a is above c just call f with params a and b otherwise call f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a is larger than c just call f passing args a and b else call f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a bigger than c just evaluate f with arguments a and b else evaluate f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a is more than c just invoke f with arguments a and b else invoke f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a larger than c do invoke f passing args a and b if not invoke f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a more than c just return a else return c", "code": "if a greater than c then return a else return c"}
+{"utterance": "if a greater than c then execute f with params a and b otherwise execute f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a greater than c then invoke f using params a and b if not invoke f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a bigger than c do execute f passing params a and b otherwise execute f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a more than c just evaluate f with parameters a and b otherwise evaluate f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "else return invoke f with n minus one and n minus too", "code": "else return f n minus one n minus two"}
+{"utterance": "when a is greater than c then evaluate f with params a and b if not evaluate f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "else return execute f using n minus one and n minus two", "code": "else return f n minus one n minus two"}
+{"utterance": "if a is larger than c then call f using arguments a and b if not call f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "make a function fibonacci that takes a single parameter n", "code": "function fibonacci one argument n"}
+{"utterance": "let there be a function fibonacci having a single param n", "code": "function fibonacci one argument n"}
+{"utterance": "if a is more than c do call f with params a and b if not call f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a greater than c then evaluate f passing parameters a and b otherwise evaluate f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a is larger than c do evaluate f passing arguments a and b if not evaluate f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a greater than c do call f using args a and b otherwise call f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a greater than c do invoke f passing parameters a and b if not invoke f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "new function fibonacci having one arg n", "code": "function fibonacci one argument s"}
+{"utterance": "when a more than c do execute f with arguments a and b otherwise execute f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a is larger than c then evaluate f passing arguments a and b if not evaluate f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "define variable doubled equal  applying double to each thing in the list", "code": "let doubled equal double element for each element in the list"}
+{"utterance": "if a is bigger than c do evaluate f passing params a and b if not evaluate f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a more than c then evaluate f passing arguments a and b else evaluate f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "give me a function greet that takes in just one parameter name", "code": "function greet one argument name"}
+{"utterance": "let there be a function fibonacci that takes in one arg n", "code": "function fibonacci one argument n"}
+{"utterance": "if a is bigger than c do call f with arguments a and b if not call f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a greater than c just call f passing parameters a and b else call f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a is larger than c just execute f passing arguments a and b if not execute f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a more than c just call f using parameters a and b otherwise call f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a more than c then call f using arguments a and b else call f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "evaluate triple on every thing inside the array", "code": "map triple array"}
+{"utterance": "if a is above c do call f with params a and b if not call f with params b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "if a is bigger than c just call f with args a and b else call f with args b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "when a is more than c then invoke f using arguments a and b else invoke f with arguments b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "new function greet that takes a single arg name", "code": "function greet one argument name"}
+{"utterance": "if a greater than c then execute f using parameters a and b if not execute f with parameters b and c", "code": "if a greater than c then call f a b else call f b c"}
+{"utterance": "let there be a function fibonacci that has just one param n", "code": "function fibonacci one argument n"}
