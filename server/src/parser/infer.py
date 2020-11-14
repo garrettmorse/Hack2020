@@ -4,7 +4,7 @@ from transformers import BartForConditionalGeneration, BartTokenizer
 from . import disk
 
 dataset = datasets.load_from_disk(disk.UNVERSIONED_DATA_DIR / "features")
-example = dataset["test"][0:5]
+example = dataset["validation"][0:5]
 
 model = BartForConditionalGeneration.from_pretrained("./models/bart-coder")
 tokenizer = BartTokenizer.from_pretrained("facebook/bart-base")

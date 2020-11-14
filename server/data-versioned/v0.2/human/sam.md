@@ -100,4 +100,8 @@ function with no arguments
 gimme
 function hello world argument n -> no 'one'
 otherwise to else
-return fib with n minus one plus fib with n minus tw0 -> return fib with n minus one plus fib n minus two
+return fib with n minus one plus fib with n minus two -> return fib with n minus one plus fib n minus two
+
+x one -> x plus one
+
+* but we can get around this by not letting people assign variables like this?

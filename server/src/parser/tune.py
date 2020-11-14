@@ -23,8 +23,8 @@ def train(cli_args) -> None:
     training_args = TrainingArguments(
         output_dir="./models/bart-coder",
         num_train_epochs=cli_args.epochs,
-        per_device_train_batch_size=32,
-        per_device_eval_batch_size=32,
+        per_device_train_batch_size=128,
+        per_device_eval_batch_size=128,
         warmup_steps=500,
         weight_decay=0.01,
         logging_dir="./logs",

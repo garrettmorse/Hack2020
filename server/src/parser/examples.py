@@ -3,6 +3,7 @@ Generates examples to be used for training our seq2seq model.
 """
 
 import csv
+import itertools
 import json
 import logging
 import os
@@ -12,7 +13,7 @@ import string
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, TypeVar
-import itertools
+
 from . import disk
 
 T = TypeVar("T")
@@ -72,7 +73,7 @@ class Example:
         Expands all $bool, $int, etc with possible values from variables.csv
         """
 
-        if '$' not in self.utterance:
+        if "$" not in self.utterance:
             yield self
             return
 
@@ -80,17 +81,17 @@ class Example:
             matches = re.findall(pattern, self.utterance)
             if not matches:
                 continue
-        
+
             for match in matches:
-                for var in variables[1:]: # skip first one
-                    for e in Example(self.utterance.replace(match, var), " ".join(self.result).replace(match, var).split()).expand():
+                for var in variables[1:]:  # skip first one
+                    for e in Example(
+                        self.utterance.replace(match, var),
+                        " ".join(self.result).replace(match, var).split(),
+                    ).expand():
                         yield e
 
     def __hash__(self):
         return hash(repr(self))
-            
-        
-                
 
 
 @dataclass
@@ -163,7 +164,11 @@ def read_templates(filepath: Path) -> List[Template]:
         contents = json.load(file)
 
     templates = (
-        contents["templates"] + contents["sam-templates"] + contents["anmol-templates"]
+        contents["templates"]
+        + contents["sam-templates"]
+        + contents["anmol-templates"]
+        + contents["jason-templates"]
+        + contents["missed-templates"]
     )
 
     return [Template.parse(template, result) for template, result in templates]
@@ -172,7 +177,7 @@ def read_templates(filepath: Path) -> List[Template]:
 def make_examples(templates: List[Template]) -> Iterator[Example]:
     unexpanded = flatten([template.generate(SYNONYMS) for template in templates])
 
-    expanded =  [e.expand() for e in unexpanded]
+    expanded = [e.expand() for e in unexpanded]
 
     return itertools.chain(*expanded)
 
@@ -187,16 +192,18 @@ def main() -> None:
     os.makedirs(disk.VERSIONED_DATA_DIR / "generated", exist_ok=True)
 
     with open(disk.VERSIONED_DATA_DIR / "generated" / "examples.json", "w") as file:
-        for ex in examples:
+        for i, ex in enumerate(examples):
             file.write(json.dumps(ex.dump()) + "\n")
+
+    print(f"Synthesized {i} examples.")
 
 
 if __name__ == "__main__":
     main()
 
     # t = Template(
-    #     "{if} $bool1 {then} {return} $bool2",
-    #     "if $bool1 then return $bool2".split(),
+    #     "$int1 equals $int2",
+    #     "set $int1 to $int2".split(),
     # )
 
     # ex = t.generate(SYNONYMS)[0]

@@ -11,14 +11,14 @@ from . import disk
 def convert_to_features(example_batch: Dict[str, Any]) -> Dict[str, Any]:
     input_encodings = tokenizer.batch_encode_plus(
         example_batch["utterance"],
-        max_length=128,
+        max_length=32,
         truncation=True,
         padding="longest",
         return_tensors="pt",
     )
     target_encodings = tokenizer.batch_encode_plus(
         example_batch["code"],
-        max_length=128,
+        max_length=32,
         truncation=True,
         padding="longest",
         return_tensors="pt",
@@ -45,12 +45,11 @@ def convert_to_features(example_batch: Dict[str, Any]) -> Dict[str, Any]:
 if __name__ == "__main__":
     dataset = datasets.load_dataset(
         "json",
-        data_files={
-            "train": "./data-versioned/v0.1/generated/train.json",
-            "test": "./data-versioned/v0.1/generated/test.json",
-            "validation": "./data-versioned/v0.1/generated/validation.json",
-        },
-    )
+        data_files=str(disk.VERSIONED_DATA_DIR / "generated/examples.json"),
+    )["train"].train_test_split(test_size=100, shuffle=True)
+
+    dataset["validation"] = dataset["test"]
+    del dataset["test"]
 
     tokenizer = BartTokenizer.from_pretrained("facebook/bart-base")
     model = BartForConditionalGeneration.from_pretrained("facebook/bart-base")

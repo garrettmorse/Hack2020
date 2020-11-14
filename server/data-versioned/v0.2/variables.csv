@@ -1,5 +1,5 @@
-$int,a,b,x,y,i
+$int,a,b,x,y,i,n
 $string,string,name,field,contents,key
-$list,results,args,contents
+$list,results,args,contents,array,list
 $bool,true,false
 $path,filename,filepath,name,path
