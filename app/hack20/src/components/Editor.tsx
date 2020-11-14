@@ -14,10 +14,13 @@ class MyEditor extends React.Component<any, any> {
     render() {
         return (
             <Container>
-                <Button icon labelPosition='left' >
+                <Button
+                    onClick={() => this.props.handleCode()}
+                    icon labelPosition='left' >
                     <Icon name='play' />
                     Run
                 </Button>
+                {this.props.loading ? <Icon style={{ marginLeft: 10 }} loading name='sync' /> : ''}
                 <AceEditor
                     value={this.props.code}
                     style={{ marginTop: 5 }}
