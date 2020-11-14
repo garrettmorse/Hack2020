@@ -2,6 +2,9 @@ import React from 'react';
 import './App.css';
 import { Button, Container, Divider, Grid, Header, Icon, Menu, Segment } from 'semantic-ui-react';
 import AceEditor from 'react-ace';
+import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/ext-language_tools"
 import Listen from './components/Listen';
 
 const onChange = (newValue: string) => {
@@ -12,7 +15,7 @@ const App = () => {
   return (
     <div>
       <div>
-        <Menu><Menu.Item name='app'>My App</Menu.Item></Menu>
+        <Menu><Menu.Item name='app'>Hack 2020</Menu.Item></Menu>
       </div>
       <div>
         <Segment>
@@ -33,6 +36,12 @@ const App = () => {
                   style={{ marginTop: 5 }}
                   mode='python'
                   onChange={onChange}
+                  editorProps={{ $blockScrolling: true }}
+                  setOptions={{
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    enableSnippets: true
+                  }}
                 />
               </Grid.Column>
             </Grid>
