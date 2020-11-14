@@ -10,9 +10,6 @@ import { sample } from './static/constants.json';
 class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean, transcript: string, code: string, output: string }> {
   constructor(props: any) {
     super(props);
-    this.sendRecording = this.sendRecording.bind(this);
-    this.onTextChange = this.onTextChange.bind(this);
-    this.onOutputChange = this.onOutputChange.bind(this)
     this.state = {
       execLoader: false,
       sendLoader: false,
@@ -21,9 +18,9 @@ class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean
       output: ''
     }
   }
-  sendRecording() {
-    const data = JSON.stringify({ transcript: this.state.transcript, code: this.state.code });
-    // console.log(`recording being sent: ${data}`);
+  sendRecording = (finalScript: string) => {
+    const data = JSON.stringify({ transcript: finalScript, code: this.state.code });
+    console.log(`recording being sent: ${data}`);
     this.setState({ ...this.state, sendLoader: true });
     AppRoutes.sendText(data)
       .then(res => {
@@ -36,14 +33,14 @@ class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean
       })
   }
 
-  execCode() {
-    const data = JSON.stringify(this.state.code);
+  execCode = () => {
+    const data = JSON.stringify({ code: this.state.code });
     console.log(`code being sent: ${data}`);
     this.setState({ ...this.state, execLoader: true });
     AppRoutes.sendText(data)
       .then(async res => {
-        await this.sleep(2000);
-        this.onOutputChange(res.data);
+        // await this.sleep(2000);
+        this.onOutputChange(res.data.output);
         this.setState({ ...this.state, execLoader: false });
       })
       .catch(e => {
@@ -52,17 +49,17 @@ class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean
       })
   }
 
-  onTextChange(newText: string) {
+  onTextChange = (newText: string) => {
     this.setState({ ...this.state, transcript: newText });
     // console.log(`update state.transcript: ${ this.state.transcript }`);
   }
 
-  onCodeChange(newCode: string) {
+  onCodeChange = (newCode: string) => {
     this.setState({ ...this.state, code: newCode });
     // console.log(`update state.code: ${ this.state.code }`);
   }
 
-  onOutputChange(newOutput: string) {
+  onOutputChange = (newOutput: string) => {
     this.setState({ ...this.state, output: newOutput });
     // console.log(`update state.output: ${ this.state.output }`);
   }
@@ -82,7 +79,8 @@ class App extends React.Component<{}, { execLoader: boolean, sendLoader: boolean
               <Grid columns={2} >
                 <Grid.Column>
                   <Header as='h3'>Record Speech</Header>
-                  <Listen loading={this.state.sendLoader}
+                  <Listen executeCode={this.execCode}
+                    loading={this.state.sendLoader}
                     onTextChange={this.onTextChange}
                     text={this.state.transcript}
                     handleRecording={this.sendRecording.bind(this)} />
