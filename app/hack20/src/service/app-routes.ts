@@ -9,10 +9,6 @@ class AppRoutes {
     execCode(data: any) {
         return http.post(`/operations/execute`, data);
     }
-
-    getCode() {
-        return http.get(`/data/code`);
-    }
 }
 
 export default new AppRoutes();
