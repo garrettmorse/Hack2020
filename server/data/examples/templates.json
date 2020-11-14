@@ -1,0 +1,100 @@
+{
+    "templates": [
+        [
+            "{if} true {then} {return} false",
+            "if true then return false"
+        ],
+        [
+            "{define a function} {that takes} {a pair of} {argument}s a and b",
+            "newfunc a b"
+        ],
+        [
+            "{return} {the result of} {the sum of a and b}",
+            "return a + b"
+        ],
+        [
+            "{print} {the result of} {the sum of a and b}",
+            "print a + b"
+        ],
+        [
+            "{return} {the result of} {my variable minus their variable}",
+            "return my variable - their variable"
+        ],
+        [
+            "{print} {the result of} {file length times file size}",
+            "print file length * file size"
+        ],
+        [
+            "{for each} line {from} all lines",
+            "for each line in all lines"
+        ],
+        [
+            "{for each} {character} {from} the string",
+            "for each char in string"
+        ],
+        [
+            "double {each} {element} {from} the array",
+            "map double array"
+        ],
+        [
+            "{call} triple on {each} {element} {from} the array",
+            "map triple array"
+        ],
+        [
+            "{if} a {is greater than} c {then} {call} f {with} {argument}s a and b {else} {call} f with {argument}s b and c",
+            "if a > c then f a b else f b c"
+        ],
+        [
+            "{if} a {is greater than} c {then} {return} a {else} {return} c",
+            "if a > c then return a else return c"
+        ],
+        [
+            "{print} all lines",
+            "print all lines"
+        ],
+        [
+            "{define a function} fibonacci {that takes} {one} {argument} n",
+            "new func fibonacci n"
+        ],
+        [
+            "{if} n {is less than} 2 {then} {return} n",
+            "if n < 2 then return n"
+        ],
+        [
+            "{else} recursively {call} f {with} n minus one and n minus {two} and return the result",
+            "else return f n - 1 n - 2"
+        ],
+        [
+            "{else} {return} {call} f {with} n minus one and n minus {two}",
+            "else return f n - 1 n - 2"
+        ],
+        [
+            "{if} d {is in} the string {then} {print} string",
+            "if d in string then print string"
+        ],
+        [
+            "{if} the string {contains} d {then} {print} string",
+            "if string contains d then print string"
+        ],
+        [
+            "{take the average} of variable one and variable {two}",
+            "mean variable one and variable two"
+        ],
+        [
+            "store {the result of} {calling} f {with} x in y",
+            "y equals f x"
+        ],
+        [
+            "{let} y {equal} {the result of} {calling} double {with} x",
+            "y equals double x"
+        ],
+        [
+            "{let} product discount {equal} {my variable minus their variable}",
+            "product discount equals my variable minus their variable"
+        ],
+        [
+            "{append} result {to the end of} the product list",
+            "append result to product list"
+        ]
+    ]
+}
