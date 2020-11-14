@@ -1,5 +1,3 @@
-# from transformers import BartForConditionalGeneration
-from pprint import pprint
 from typing import Any, Dict
 
 import datasets
@@ -31,10 +29,10 @@ def convert_to_features(example_batch: Dict[str, Any]) -> Dict[str, Any]:
     labels[labels[:, :] == model.config.pad_token_id] = -100
 
     encodings = {
-        "input_ids": input_encodings["input_ids"].numpy(),
-        "attention_mask": input_encodings["attention_mask"].numpy(),
-        "decoder_input_ids": decoder_input_ids.numpy(),
-        "labels": labels.numpy(),
+        "input_ids": input_encodings["input_ids"].numpy().copy(),
+        "attention_mask": input_encodings["attention_mask"].numpy().copy(),
+        "decoder_input_ids": decoder_input_ids.numpy().copy(),
+        "labels": labels.numpy().copy(),
     }
 
     return encodings
@@ -57,7 +55,9 @@ if __name__ == "__main__":
     tokenizer = BartTokenizer.from_pretrained("facebook/bart-base")
     model = BartForConditionalGeneration.from_pretrained("facebook/bart-base")
 
-    features_dataset = dataset.map(convert_to_features, batched=True)
+    dataset = dataset.map(convert_to_features, batched=True)
+
     columns = ["input_ids", "labels", "decoder_input_ids", "attention_mask"]
-    features_dataset.set_format(type="torch", columns=columns)
-    features_dataset.save_to_disk(disk.UNVERSIONED_DATA_DIR / "features")
+    dataset.set_format(type="torch", columns=columns)
+
+    dataset.save_to_disk(disk.UNVERSIONED_DATA_DIR / "features")

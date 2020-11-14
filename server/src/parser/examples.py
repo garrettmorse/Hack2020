@@ -6,19 +6,21 @@ import csv
 import json
 import logging
 import os
+import random
 import string
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, Iterator, List, Optional, TypeVar
+from typing import Dict, Iterable, Iterator, List, TypeVar
+
+from . import disk
 
 T = TypeVar("T")
+
+
 logger = logging.getLogger()
 
 
-VERSIONED_DATA_DIR = Path("./data-versioned/examples")
-UNVERSIONED_DATA_DIR = Path("./data-unversioned")
-
-os.makedirs(UNVERSIONED_DATA_DIR, exist_ok=True)
+random.seed(42)
 
 
 def read_synonyms(filepath: Path) -> List[List[str]]:
@@ -28,7 +30,7 @@ def read_synonyms(filepath: Path) -> List[List[str]]:
         return [list(row) for row in reader]
 
 
-SYNONYMS = read_synonyms(VERSIONED_DATA_DIR / "synonyms.csv")
+SYNONYMS = read_synonyms(disk.VERSIONED_DATA_DIR / "synonyms.csv")
 print(sum(map(len, SYNONYMS)))
 
 
@@ -50,15 +52,8 @@ class Example:
     utterance: str
     result: List[str]
 
-    @staticmethod
-    def parse(dct: Dict[str, str]) -> "Optional[Example]":
-        try:
-            return Example(dct["utterance"].strip(), dct["result"].split())
-        except KeyError:
-            return None
-
     def dump(self) -> Dict[str, str]:
-        return {"utterance": self.utterance.strip(), "result": " ".join(self.result)}
+        return {"utterance": self.utterance.strip(), "code": " ".join(self.result)}
 
 
 @dataclass
@@ -126,16 +121,6 @@ class Template:
                 yield {**other_generated_args, first_arg: synonym}
 
 
-def read_examples(filepath: Path) -> Iterator[Example]:
-    with open(filepath) as file:
-        examples = json.load(file)["examples"]
-
-    for dct in examples:
-        example = Example.parse(dct)
-        if example:
-            yield example
-
-
 def read_templates(filepath: Path) -> List[Template]:
     with open(filepath) as file:
         contents = json.load(file)
@@ -152,8 +137,7 @@ def make_examples(templates: List[Template]) -> Iterator[Example]:
 
 
 def main() -> None:
-    template_file = VERSIONED_DATA_DIR / "templates.json"
-    examples_file = UNVERSIONED_DATA_DIR / "examples.json"
+    template_file = disk.VERSIONED_DATA_DIR / "templates.json"
 
     templates = read_templates(template_file)
 
@@ -161,10 +145,25 @@ def main() -> None:
 
     print(len(examples))
 
-    example_json = {"examples": [e.dump() for e in examples]}
+    random.shuffle(examples)
 
-    with open(examples_file, "w") as file:
-        json.dump(example_json, file, indent=2)
+    train = examples[:-200]
+    validation = examples[-200:-100]
+    test = examples[-100:]
+
+    os.makedirs(disk.VERSIONED_DATA_DIR / "generated", exist_ok=True)
+
+    with open(disk.VERSIONED_DATA_DIR / "generated" / "train.json", "w") as file:
+        for ex in train:
+            file.write(json.dumps(ex.dump()) + "\n")
+
+    with open(disk.VERSIONED_DATA_DIR / "generated" / "validation.json", "w") as file:
+        for ex in validation:
+            file.write(json.dumps(ex.dump()) + "\n")
+
+    with open(disk.VERSIONED_DATA_DIR / "generated" / "test.json", "w") as file:
+        for ex in test:
+            file.write(json.dumps(ex.dump()) + "\n")
 
 
 if __name__ == "__main__":
