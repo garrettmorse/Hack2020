@@ -95,6 +95,10 @@
         [
             "{append} result {to the end of} the product list",
             "append result to product list"
+        ],
+        [
+            "{insert} result {at the front of} the product list",
+            "insert result to front product list"
         ]
     ]
 }
