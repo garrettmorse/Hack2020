@@ -58,23 +58,26 @@ class RuleEngine:
     def parse_less_than_or_equal_to(self, tokens):
         pass
 
+    def parse_if(self, tokens):
+        pass
 
-# PLUS = "plus"
-# MINUS = "minus"
-# TIMES = "times"
-# DOT = "dot"
-# DIVIDE = "divide"
-# THEN = "then"
-# GREATER_THAN = "greater_than"
-# LESS_THAN = "less_than"
-# GREATER_THAN_OR_EQUAL_TO = "greater_than_or_equal_to"
-# LESS_THAN_OR_EQUAL_TO = "less_than_or_equal_to"
-# IF = "if"
-# ELSE = "else"
-# SET = "set"
-# EQUALS = "equals"
-# AND = "and"
-# OR = "or"
-# APPEND = "append"
-# PREPEND = "prepend"
-# FOR = "for"
+    def parse_else(self, tokens):
+        pass
+
+    def parse_set(self, tokens):
+        pass
+
+    def parse_equals(self, tokens):
+        pass
+
+    def parse_and(self, tokens):
+        pass
+
+    def parse_or(self, tokens):
+        pass
+
+    def parse_append(self, tokens):
+        pass
+
+    def parse_for(self, tokens):
+        pass
