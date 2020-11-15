@@ -19,8 +19,8 @@ def test_goto_end() -> None:
     rule_engine.add_tokens(tokens)
     code = rule_engine.parse(code)
 
-    assert len(code.lines) == 10
-    assert "8" in code.lines[-1]
+    assert len(code.lines) == 11
+    assert code.cursor_position ==
 
 def test_delete_beginning() -> None:
     tokens = "function y two argument x and y"

@@ -100,7 +100,12 @@ class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean
     return (
       <div>
         <div>
-          <Menu><Menu.Item name='app'>Hack 2020</Menu.Item></Menu>
+          <Menu><Menu.Item name='app'>
+            <Icon style={{ color: '#6868f6' }} name='microphone' />
+            <Icon style={{ color: '#6868f6', marginLeft: '-7%' }} name='angle right' />
+            <Icon style={{ color: '#6868f6', marginLeft: '-9%' }} name='angle right' />
+            <Icon style={{ color: '#6868f6', marginLeft: '-9%' }} name='angle right' />
+            <div style={{ marginRight: -40 }}>Hack 2020 by //todo</div></Menu.Item></Menu>
         </div>
         <div style={{ margin: 10 }}>
           <Grid style={{ borderRadius: 5 }} celled columns={2} >
@@ -142,11 +147,12 @@ class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean
             </Grid.Column>
           </Grid>
 
-          <Divider hidden style={{ top: '67%' }} vertical>
+          <Divider hidden style={{ top: '80%' }} vertical>
             <Icon name='long arrow alternate right' />
-
           </Divider>
-          <Divider hidden style={{ top: '33%' }} vertical><Icon name='long arrow alternate left' /></Divider>
+          <Divider hidden style={{ top: '33%' }} vertical>
+            <Icon name='long arrow alternate left' />
+          </Divider>
         </div>
       </div >
     );
