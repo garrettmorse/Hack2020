@@ -54,6 +54,16 @@ def status() -> Dict[str, Any]:
     return result
 
 
+@app.route("/operations/reset", methods=["POST"])
+def operations_reset() -> Dict[str, Any]:
+    global state_engine, rule_engine
+    state_engine = StateEngine()
+    rule_engine = RuleEngine()
+    result = {"success": True}
+    log_result(result)
+    return result
+
+
 @app.route("/operations/undo", methods=["POST"])
 def operations_undo() -> Dict[str, Any]:
     state_engine.undo_history()
