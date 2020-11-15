@@ -2,7 +2,6 @@ from typing import Callable, Dict, Iterable, List
 
 from ..state_engine import Code
 from .keywords import PrimaryKeywords, SecondaryKeywords
-from .symbol import Symbol
 
 ParseFunc = Callable[[Code], str]
 
@@ -281,7 +280,7 @@ class RuleEngine:
     def parse_variable(self, code: Code) -> str:
         variable = []
 
-        keywords = PrimaryKeywords.list_values() + SecondaryKeywords.list_values()
+        keywords = PrimaryKeywords.values() + SecondaryKeywords.values()
 
         while self.tokens and (self.peek() not in keywords):
             variable.append(self.pop())
