@@ -1,8 +1,7 @@
 from typing import Callable, Dict, Iterable, List
 
-from ..state_engine import Code
+from ..state_engine import Code, Symbols
 from .keywords import PrimaryKeywords, SecondaryKeywords
-from .symbol import Symbol
 
 ParseFunc = Callable[[Code], str]
 

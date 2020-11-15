@@ -13,7 +13,7 @@ CORS(app)
 # Engine Setup
 state_engine = StateEngine()
 # bart_engine = BartEngine()
-rule_engine = RuleEngine()
+# rule_engine = RuleEngine()
 
 
 # Routes
@@ -76,9 +76,10 @@ def operations_process():
 
     # TODO: Wait for model ~3GB
     # tokens = bart_engine.predict(raw_text)
-    rule_engine.add_tokens(tokens)
-    new_code = rule_engine.parse(state_engine.code)
-    state_engine.set_code(new_code)
+    # TODO: Fix rule_engine
+    # rule_engine.add_tokens(tokens)
+    # new_code = rule_engine.parse(state_engine.code)
+    # state_engine.set_code(new_code)
 
     return {"code": state_engine.print_code(), "success": True}
 
