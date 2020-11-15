@@ -11,12 +11,12 @@ default_code_path = "./src/state_engine/default_code.py"
 
 
 class StateEngine:
-    def __init__(self):
+    def __init__(self) -> None:
         with open(default_code_path, "r") as fin:
             raw_code = "".join(fin.readlines())
-            self.code: Code = Code.from_raw(raw_code)
+            self.code = Code.from_raw(raw_code)
         self.history: List[State] = []
-        self.history_pos: int = -1
+        self.history_pos = -1
 
     def set_code(self, raw_code: str) -> None:
         self.code = Code.from_raw(raw_code)

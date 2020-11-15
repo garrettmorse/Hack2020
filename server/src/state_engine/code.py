@@ -4,16 +4,16 @@ from typing import List, Optional
 
 
 class Line:
-    def __init__(self, value: str, line_number: int, tab_number: int):
+    def __init__(self, value: str, line_number: int, tab_number: int) -> None:
         self.value = value
         self.line_number = line_number
         self.tab_number = tab_number
 
 
 class Code:
-    def __init__(self, lines: List[Line] = [], global_tab_number: int = 0):
-        self.lines: List[Line] = lines
-        self.global_tab_number: int = global_tab_number
+    def __init__(self, lines: List[Line] = [], global_tab_number: int = 0) -> None:
+        self.lines = lines
+        self.global_tab_number = global_tab_number
         self.print_lines_cache: Optional[str] = None
 
     def add_line(self, value: str, tab_out_number: int = 0) -> None:
@@ -53,4 +53,4 @@ class Code:
         if last_line.value and last_line.value[-1] == ":":
             global_tab_number += 1
 
-        return self(last_line, global_tab_number)
+        return self(lines, global_tab_number)
