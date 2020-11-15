@@ -2,6 +2,19 @@ from collections import OrderedDict
 from typing import Dict, Iterator, List, Optional, TypeVar, Union
 
 
+class VariableSymbol:
+    def __init__(self, variable_name: str) -> None:
+        self.name = variable_name
+
+
+class FunctionSymbol:
+    def __init__(self, function_name: str, parameter_names: List[str]) -> None:
+        self.name = function_name
+        self.parameters = OrderedDict()
+        for name in parameter_names:
+            self.parameters[name] = VariableSymbol(name)
+
+
 class Symbols:
     def __init__(self) -> None:
         self.function_symbols: Dict[str, FunctionSymbol] = {}
@@ -41,16 +54,3 @@ class Symbols:
             yield "".join(token_list)
             yield "".join([token.capitalize() for token in token_list])
             pos += 1
-
-
-class VariableSymbol:
-    def __init__(self, variable_name: str) -> None:
-        self.name = variable_name
-
-
-class FunctionSymbol:
-    def __init__(self, function_name: str, parameter_names: List[str]) -> None:
-        self.name = function_name
-        self.parameters = OrderedDict()
-        for name in parameter_names:
-            self.parameters[name] = VariableSymbol(name)

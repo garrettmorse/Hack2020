@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Iterable, List
+from typing import Callable, Dict, Iterable, List, Literal
 
 from ..state_engine import Code
 from . import utils
@@ -93,8 +93,12 @@ class RuleEngine:
         self.tokens = self.tokens[1:]
         return top
 
+    def popmany(self, i: int) -> None:
+        for _ in range(i):
+            self.pop()
+
     def check_next(self, tok: str) -> None:
-        assert self.peek() == tok, f"next token '{self.peek()} is not '{tok}'"
+        assert self.peek() == tok, f"next token '{self.peek()}' is not '{tok}'"
 
     def parse(self, code: Code) -> Code:
         """
@@ -112,13 +116,12 @@ class RuleEngine:
             "prepend": self.parse_prepend,
         }
 
+        print(self.peek(), parse_fns[self.peek()])
+
         while self.peek() in parse_fns:
-            parsed_line = parse_fns[self.pop()](self.code)
-            self.code.add_line(parsed_line)
+            parsed_line = parse_fns[self.pop()](code)
+            code.add_line(parsed_line)
 
-        return self.code
-
-        code.add_line(code_str)
         return code
 
     def parse_function(self, code: Code) -> str:
@@ -280,7 +283,24 @@ class RuleEngine:
 
         return " ".join(expression)
 
-    def parse_variable(self, code: Code) -> str:
+    def parse_variable(
+        self, code: Code, context: Literal["function", "variable"] = "variable"
+    ) -> str:
+        if context == "function":
+            match = code.symbols.find_best_matching_function_symbol(self.tokens)
+            if match:
+                symbol, consumed = match
+                self.popmany(consumed)
+                return symbol.name
+        else:
+            match = code.symbols.find_best_matching_variable_symbol(self.tokens)
+            if match:
+                symbol, consumed = match
+                self.popmany(consumed)
+                return symbol.name
+
+        # variable not found in symbol table
+
         variable = []
 
         keywords = PrimaryKeywords.values() + SecondaryKeywords.values()

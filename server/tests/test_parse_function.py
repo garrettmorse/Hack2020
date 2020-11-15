@@ -9,7 +9,7 @@ def test_basic_func() -> None:
 
     code = Code()
 
-    assert engine.parse_if(code) == "def f(a, b):"
+    assert engine.parse_function(code) == "def f(a, b):"
     assert engine.tokens == "".split()
 
 
@@ -20,7 +20,7 @@ def test_func_zero_args() -> None:
 
     code = Code()
 
-    assert engine.parse_if(code) == "def f():"
+    assert engine.parse_function(code) == "def f():"
     assert engine.tokens == "".split()
 
 
@@ -31,7 +31,7 @@ def test_multi_word_func_one_arg() -> None:
 
     code = Code()
 
-    assert engine.parse_if(code) == "def read_file(name):"
+    assert engine.parse_function(code) == "def read_file(name):"
     assert engine.tokens == "".split()
 
 
@@ -42,5 +42,5 @@ def test_multi_word_func_one_multi_word_arg() -> None:
 
     code = Code()
 
-    assert engine.parse_if(code) == "def read_file(file_location):"
+    assert engine.parse_function(code) == "def read_file(file_location):"
     assert engine.tokens == "".split()
