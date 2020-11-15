@@ -14,6 +14,7 @@ class RuleEngine:
         self.tokens = []
         # TODO: Dict of something
         self.symbols = {}
+        self.tokens = []
         self.nums = {
             "zero": 0,
             "one": 1,
@@ -113,118 +114,114 @@ class RuleEngine:
 
         return self.code
 
-    def _build_func_definition(self, name: str, params: List[str]) -> str:
-        paramstr = ", ".join(params)
-        return f"def {name}({paramstr}):\n"
+        code.add_line(code_str)
+        return code
 
-    def parse_function(self, tokens: List[str]) -> List[str]:
+    def parse_expression(self, tokens: List[str], code: Code):
+        pass
+
+    def parse_function(self, code: Code) -> str:
+        tokens = self.tokens[1:]
         arg_i, _ = self.find_next_specific(tokens, SecondaryKeywords.ARGUMENT)
+        stop_i, _ = self.find_next(tokens, PrimaryKeywords)
+
         and_i, _ = self.find_next_specific(tokens, SecondaryKeywords.AND)
+
         num_args = self.nums[tokens[arg_i - 1]]
         params = ["" for i in range(num_args)]
-        func_name = "_".join(tokens[1 : arg_i - 2])
+        func_name = "_".join(tokens[: arg_i - 1])
         if and_i != -1:
-            params[-1] = " ".join(tokens[and_i:])
-            tokens = tokens[:and_i]
+            params[-1] = "_".join(tokens[and_i + 1 : stop_i])
             num_args = num_args - 1
-        tokens = tokens[arg_i + 1 :]
-        for j in range(num_args - 1):
-            params[j] = tokens[j]
-        params[j] = tokens[j:].join("_")
 
-        self.symbols[func_name] = Symbol(
-            func_name, {"type": "function", "params": params, "num_params": len(params)}
-        )
+        param_tokens = tokens[:and_i]
+        i = 0
+        while i < num_args - 1:
+            params[i] = param_tokens[i]
+            i += 1
+        params[i] = "_".join(param_tokens[i:])
 
-        return [self._build_func_definition(func_name, params)]
+        # self.symbols[func_name] = Symbol() TODO when symbols get defined
+
+        paramstr = ", ".join(params)
+        self.tokens = tokens[stop_i:]
+        return f"def {func_name}({paramstr}):\n"
 
     def parse_call(self, code: Code) -> str:
         raise NotImplementedError()
 
-    def parse_return(self, tokens):
-        return f"return {self.parse_core(tokens)}\n"
+    def parse_return(self, code: Code) -> str:
+        self.tokens = self.tokens[1:]
+        expr = self.parse_expression(code)
+        return f"return {expr}\n"
 
-    def parse_if(self, tokens: List[str]) -> List[str]:
+    def parse_if(self, code: Code) -> str:
         """
-        IF boolean expression THEN action .../ELSE boolean expressions THEN action
+        IF boolean expression THEN action
         """
-        code_rep = []
-        tokens = tokens[1:]
+        tokens = self.tokens[1:]
+
+        self.tokens = tokens
+        expr = self.parse_expression(code)
+        tokens = self.tokens
         then_i, _ = self.find_next_specific(tokens, SecondaryKeywords.THEN)
-        expr_tokens = tokens[:then_i]
-        expr_str = self.parse_core(expr_tokens)
-        code_rep.append(f"if {expr_str}:\n")
-        tokens = tokens[then_i + 1 :]
+        self.tokens = tokens[then_i + 1 :]
+        return f"if {expr}:"
 
-        else_i, _ = self.find_next_specific(tokens, PrimaryKeywords.ELSE)
-        if else_i == -1:
-            code_rep.append("\t" + self.parse_core(tokens))
-            tokens = []
-        else:
-            code_rep.append("\t" + self.parse_core(tokens[:else_i]))
-            tokens = tokens[else_i + 1 :]
+    def parse_else(self, code: Code) -> str:
+        """
+        ELSE action
+        """
+        tokens = self.tokens[1:]
+        self.tokens = tokens
+        return f"else:"
 
-        while not self.is_EOS(tokens):
-            then_i, _ = self.find_next_specific(tokens, SecondaryKeywords.THEN)
-            # Assume final else: ELSE THEN action
-            expr_tokens = tokens[:then_i]
-            if tokens:
-                expr_str = self.parse_core(expr_tokens)
-                code_rep.append(f"else {expr_str}:\n")
-            else:
-                code_rep.append("else:\n")
-
-            tokens = tokens[then_i + 1 :]
-            else_i, _ = self.find_next_specific(tokens, PrimaryKeywords.ELSE)
-            if else_i == -1:
-                code_rep.append("\t" + self.parse_core(tokens))
-                tokens = []
-            else:
-                code_rep.append("\t" + self.parse_core(tokens[:else_i]))
-                tokens = tokens[else_i + 1 :]
-
-        return code_rep
-
-    def parse_set(self, tokens: List[str]) -> List[str]:
+    def parse_set(self, code: Code) -> str:
         """
         SET x to y
         """
-        code_rep = []
+        tokens = self.tokens[1:]
         to_i, _ = self.find_next_specific(tokens, SecondaryKeywords.TO)
-        name = "_".join(tokens[1:to_i])
-        tokens = RuleEngine.consume_many(tokens, to_i)
-        expr = self.parse_core(tokens)
-        code_rep.append(f"{name}={expr}\n")
-        self.symbols[name] = Symbol(name, expr)
-        return code_rep
+        name = "_".join(tokens[:to_i])
 
-    def parse_append(self, tokens):
+        self.tokens = tokens[to_i + 1 :]
+        expr = self.parse_expression(code)
+
+        # Update Symbols TODO
+
+        return f"{name} = {expr}"
+
+    def parse_append(self, code: Code) -> str:
         """
         APPEND result TO product list
         """
-        code_rep = []
+        tokens = self.tokens[1:]
         to_i, _ = self.find_next_specific(tokens, SecondaryKeywords.TO)
+        stop_i, _ = self.find_next(tokens, PrimaryKeywords)
         # Might use the symbols here witha  find_best_match function
-        try_ele = "_".join(tokens[1:to_i])
-        col = "_".join(tokens[to_i + 1 :])
-        code_rep.append(f"{col}.append({try_ele})")
-        # May have to update symbols with updated value
-        return code_rep
+        try_ele = "_".join(tokens[:to_i])
+        col = "_".join(tokens[to_i + 1 : stop_i])
 
-    def parse_prepend(self, tokens):
+        self.tokens = tokens[stop_i:]
+        # TODO update symbols?
+        return f"{col}.append({try_ele})"
+
+    def parse_prepend(self, code: Code) -> str:
         """
         PREPEND result TO product list
         """
-        code_rep = []
+        tokens = self.tokens[1:]
         to_i, _ = self.find_next_specific(tokens, SecondaryKeywords.TO)
+        stop_i, _ = self.find_next(tokens, PrimaryKeywords)
         # Might use the symbols here witha  find_best_match function
-        try_ele = "_".join(tokens[1:to_i])
-        col = "_".join(tokens[to_i + 1 :])
-        code_rep.append(f"{col}.insert(0, {try_ele})")
-        # May have to update symbols with updated value
-        return code_rep
+        try_ele = "_".join(tokens[:to_i])
+        col = "_".join(tokens[to_i + 1 : stop_i])
 
-    def parse_for(self, tokens):
+        self.tokens = tokens[stop_i:]
+        # TODO update symbols?
+        return f"{col}.insert(0, {try_ele})"
+
+    def parse_for(self, code: Code) -> str:
         """
         FOR var IN collection
 
@@ -232,25 +229,28 @@ class RuleEngine:
 
         FOR var IN RANGE num1 TO num2
         """
-
-        code_rep = []
+        tokens = self.tokens[1:]
         in_i, _ = self.find_next_specific(tokens, SecondaryKeywords.IN)
-        iter_var = "_".join(tokens[1:in_i])
+        stop_i, _ = self.find_next(tokens, PrimaryKeywords)
+
+        iter_var = "_".join(tokens[:in_i])
         # iter_var = find_best_match(iter_var)
-        self.symbols[iter_var] = Symbol(iter_var, {"type": "literator"})
-        range_i, _ = self.find_next_specific(tokens, SecondaryKeywords.RANGE)
+        self.symbols[iter_var] = Symbol(iter_var, {"type": "literator"})  # TODO
+        range_i, _ = self.find_next_specific(tokens[:stop_i], SecondaryKeywords.RANGE)
+
+        self.tokens = tokens[stop_i:]
         if range_i != -1:
             # collection is a numerical range
             to_i, _ = self.find_next_specific(tokens, SecondaryKeywords.TO)
             x1 = "_".join(tokens[range_i + 1 : to_i])
-            x2 = "_".join(tokens[to_i + 1 :])
+            x2 = "_".join(tokens[to_i + 1 : stop_i])
             """
             x1 = find_best_match(x1)
             x2 = find_best_match(x2)
             """
-            code_rep.append(f"for {iter_var} in range({x1}, {x2}):\n")
+            return f"for {iter_var} in range({x1}, {x2}):\n"
         else:
-            col = "_".join(tokens[in_i + 1 :])
+            col = "_".join(tokens[in_i + 1 : stop_i])
             # col = find_best_match(col)
             code_rep.append(f"for {iter_var} in {col}:\n")
         return code_rep
