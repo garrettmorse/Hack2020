@@ -2,10 +2,6 @@
 
 HackOHI/O 2020
 
-## Demo
-
-[![Demo Video](https://img.youtube.com/vi/YzGKLUlunUM/maxresdefault.jpg)](https://youtu.be/YzGKLUlunUM)
-
 ## Team
 
 Anmol Takiar, Sam Stevens, Garrett Morse, Jason Guo
@@ -13,3 +9,7 @@ Anmol Takiar, Sam Stevens, Garrett Morse, Jason Guo
 ## Results
 
 TBD
+
+## Demo
+
+[![Demo Video](https://img.youtube.com/vi/YzGKLUlunUM/maxresdefault.jpg)](https://youtu.be/YzGKLUlunUM)
