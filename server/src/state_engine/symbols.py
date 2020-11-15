@@ -1,5 +1,18 @@
 from collections import OrderedDict
-from typing import Dict, Iterator, List, Optional, TypeVar, Union
+from typing import Dict, Iterator, List, Optional, Tuple, Union
+
+
+class VariableSymbol:
+    def __init__(self, variable_name: str) -> None:
+        self.name = variable_name
+
+
+class FunctionSymbol:
+    def __init__(self, function_name: str, parameter_names: List[str]) -> None:
+        self.name = function_name
+        self.parameters = OrderedDict()
+        for name in parameter_names:
+            self.parameters[name] = VariableSymbol(name)
 
 
 class VariableSymbol:
@@ -30,27 +43,29 @@ class Symbols:
 
     def find_best_matching_function_symbol(
         self, tokens: List[str]
-    ) -> Optional[FunctionSymbol]:
-        for option in self.generate_symbol_token_match_options(tokens):
+    ) -> Optional[Tuple[FunctionSymbol, int]]:
+        for option, num_used in self.generate_symbol_token_match_options(tokens):
             if option in self.function_symbols:
-                return self.function_symbols[option]
+                return (self.function_symbols[option], num_used)
         return None
 
     def find_best_matching_variable_symbol(
         self, tokens: List[str]
-    ) -> Optional[VariableSymbol]:
-        for option in self.generate_symbol_token_match_options(tokens):
+    ) -> Optional[Tuple[VariableSymbol, int]]:
+        for option, num_used in self.generate_symbol_token_match_options(tokens):
             if option in self.variable_symbols:
-                return self.variable_symbols[option]
+                return (self.variable_symbols[option], num_used)
         return None
 
     @staticmethod
-    def generate_symbol_token_match_options(tokens: List[str]) -> Iterator[str]:
+    def generate_symbol_token_match_options(
+        tokens: List[str],
+    ) -> Iterator[Tuple[str, int]]:
         pos = 0
         while pos < len(tokens):
             token_list = tokens[: pos + 1]
             if len(token_list) > 1:
-                yield "_".join(token_list)
-            yield "".join(token_list)
-            yield "".join([token.capitalize() for token in token_list])
+                yield ("_".join(token_list), pos + 1)
+            yield ("".join(token_list), pos + 1)
+            yield ("".join([token.capitalize() for token in token_list]), pos + 1)
             pos += 1

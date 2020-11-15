@@ -286,18 +286,19 @@ class RuleEngine:
     def parse_variable(
         self, code: Code, context: Literal["function", "variable"] = "variable"
     ) -> str:
+
         if context == "function":
-            match = code.symbols.find_best_matching_function_symbol(self.tokens)
-            if match:
-                symbol, consumed = match
+            fn_match = code.symbols.find_best_matching_function_symbol(self.tokens)
+            if fn_match:
+                fn_symbol, consumed = fn_match
                 self.popmany(consumed)
-                return symbol.name
+                return fn_symbol.name
         else:
-            match = code.symbols.find_best_matching_variable_symbol(self.tokens)
-            if match:
-                symbol, consumed = match
+            var_match = code.symbols.find_best_matching_variable_symbol(self.tokens)
+            if var_match:
+                var_symbol, consumed = var_match
                 self.popmany(consumed)
-                return symbol.name
+                return var_symbol.name
 
         # variable not found in symbol table
 

@@ -13,7 +13,7 @@ CORS(app)
 # Engine Setup
 state_engine = StateEngine()
 # bart_engine = BartEngine()
-rule_engine = RuleEngine()
+# rule_engine = RuleEngine()
 
 
 # Routes
@@ -36,8 +36,9 @@ def operations_undo():
 @app.route("/operations/execute", methods=["POST"])
 def operations_execute():
     body = request.json
-    raw_code = body.get("code", None)
-    state_engine.set_code(raw_code)
+    if body.get("edited", False):
+        raw_code = body.get("code", None)
+        state_engine.set_code(raw_code)
 
     result = {"output": "Error. Something went wrong", "success": False}
 
@@ -76,9 +77,10 @@ def operations_process():
 
     # TODO: Wait for model ~3GB
     # tokens = bart_engine.predict(raw_text)
-    rule_engine.add_tokens(tokens)
-    new_code = rule_engine.parse(state_engine.code)
-    state_engine.set_code(new_code)
+    # TODO: Fix rule_engine
+    # rule_engine.add_tokens(tokens)
+    # new_code = rule_engine.parse(state_engine.code)
+    # state_engine.set_code(new_code)
 
     return {"code": state_engine.print_code(), "success": True}
 
