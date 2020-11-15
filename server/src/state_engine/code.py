@@ -33,7 +33,7 @@ class Code:
             Line(value, self.global_tab_number),
         )
 
-        if value[-1] == ":":
+        if value and value[-1] == ":":
             self.global_tab_number += 1
         if tab_out_number != 0:
             self.global_tab_number -= tab_out_number
@@ -57,7 +57,8 @@ class Code:
     def print_lines(self) -> str:
         if not self.print_lines_cache:
             results = [
-                ((line.tab_number * "\t") + line.value + "\n") for line in self.lines
+                ((line.tab_number * "\t") + (line.value if line.value else "") + "\n")
+                for line in self.lines
             ]
             self.print_lines_cache = "".join(results).rstrip()
         return self.print_lines_cache
