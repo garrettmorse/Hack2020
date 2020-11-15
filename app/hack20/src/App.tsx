@@ -41,7 +41,7 @@ class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean
   * operations/execute
   */
   execCode = () => {
-    const data = JSON.stringify({ code: this.state.code });
+    const data = JSON.stringify({ code: this.state.code, edited: this.state.codeEdited });
     console.log(data);
     this.setState({ execLoader: true });
     AppRoutes.execCode(data)
@@ -49,6 +49,7 @@ class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean
         // await this.sleep(2000);
         console.log(res);
         this.onOutputChange(res.data.output);
+        this.onCodeChange(res.data.code, false);
         this.setState({ execLoader: false });
       })
       .catch(e => {
@@ -63,6 +64,7 @@ class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean
   }
 
   onCodeChange = (newCode: string, codeEdited = true) => {
+    console.log("value of edit:" + codeEdited);
     this.setState({ code: newCode, codeEdited });
     console.log(`update state.code: ${this.state.code}`);
   }
