@@ -7,7 +7,7 @@ from ..state_engine import Code
 from . import utils
 from .keywords import PrimaryKeywords, SecondaryKeywords
 
-ParseFunc = Callable[[Code], str]
+ParseFunc = Callable[[Code], Optional[str]]
 
 
 class RuleEngine:
