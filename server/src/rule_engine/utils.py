@@ -1,3 +1,6 @@
+from typing import Tuple
+
+
 def text2int(textnum: str, numwords={}) -> int:
     if not numwords:
         units = [
@@ -58,3 +61,10 @@ def text2int(textnum: str, numwords={}) -> int:
             current = 0
 
     return result + current
+
+
+def safe_text2int(word: str) -> Tuple[bool, int]:
+    try:
+        return True, text2int(word)
+    except ValueError:
+        return False, -1

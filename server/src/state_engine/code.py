@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from typing import List, Optional, Type
 
 from .symbols import Symbols
@@ -19,6 +18,7 @@ class Code:
         self.global_tab_number = global_tab_number
         self.print_lines_cache: Optional[str] = None
         self.symbols = Symbols()
+        self.symbols.add_function_symbol("print", "arg")
 
     def add_line(self, value: str, tab_out_number: int = 0) -> None:
         self.print_lines_cache = None
