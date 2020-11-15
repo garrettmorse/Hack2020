@@ -114,8 +114,8 @@ def operations_process() -> Dict[str, Any]:
 
     tokens = bart_engine.predict(raw_text.strip())
     rule_engine.add_tokens(tokens)
-    original_code_copy = state_engine.get_deepcopy()
-    new_code = rule_engine.parse(original_code_copy)
+    code_copy = state_engine.get_code_deepcopy()
+    new_code = rule_engine.parse(code_copy)
     state_engine.set_code(new_code)
 
     result = {"code": state_engine.print_code(), "success": True}
