@@ -40,9 +40,9 @@ def operations_execute() -> Dict[str, Any]:
     print(body)
     if body.get("edited", False):
         raw_code = body.get("code", None)
-        state_engine.set_code(raw_code)
+        state_engine.parse_and_set_code(raw_code)
 
-    result = {"output": "Error. Something went wrong", "success": False}
+    code = (state_engine.print_code(),)
 
     try:
         code_out, code_err = io.StringIO(), io.StringIO()
@@ -60,9 +60,13 @@ def operations_execute() -> Dict[str, Any]:
         code_err.close()
 
         output = output if output else error
-        result = {"output": output, "success": True}
+        result = {"code": code, "output": output, "success": True}
     except Exception as ex:
-        result = {"output": str(ex), "success": False}
+        result = {
+            "code": code,
+            "output": str(ex),
+            "success": False,
+        }
 
     sys.stdout = sys.__stdout__
     sys.stderr = sys.__stderr__
@@ -76,7 +80,7 @@ def operations_process() -> Dict[str, Any]:
     # raw_text = body.get("transcript", None)
     if body.get("edited", False):
         raw_code = body.get("code", None)
-        state_engine.set_code(raw_code)
+        state_engine.parse_and_set_code(raw_code)
 
     # TODO: Wait for model ~3GB
     # tokens = bart_engine.predict(raw_text)

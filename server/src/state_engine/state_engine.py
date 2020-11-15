@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import copy
-from typing import Any, Dict, List, Union
+from typing import Dict, List, Union
 
-from .code import Code, Line
+from .code import Code
 
 StateInternal = Union[Code]
 State = Dict[str, StateInternal]
@@ -18,8 +18,12 @@ class StateEngine:
         self.history: List[State] = []
         self.history_pos = -1
 
-    def set_code(self, raw_code: str) -> None:
+    def parse_and_set_code(self, raw_code: str) -> None:
         self.code = Code.from_raw(raw_code)
+        self.save_history()
+
+    def set_code(self, code: Code) -> None:
+        self.code = code
         self.save_history()
 
     def print_code(self) -> str:
