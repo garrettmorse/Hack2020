@@ -10,8 +10,8 @@ class AppRoutes {
         return http.post(`/operations/execute`, data);
     }
 
-    getCode() {
-        return http.get(`/data/code`);
+    undoCode() {
+        return http.post(`/operations/undo`);
     }
 }
 

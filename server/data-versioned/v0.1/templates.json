@@ -1,0 +1,220 @@
+{
+    "templates": [
+        [
+            "{if} true {then} {return} false",
+            "if true then return false"
+        ],
+        [
+            "{define a function} {that takes} {a pair of} {argument}s a and b",
+            "function [FUNC] two arguments a and b"
+        ],
+        [
+            "{return} {the result of} {the sum of a and b}",
+            "return a plus b"
+        ],
+        [
+            "{print} {the result of} {the sum of a and b}",
+            "call print a plus b"
+        ],
+        [
+            "{return} {the result of} {my variable minus their variable}",
+            "return my variable minus their variable"
+        ],
+        [
+            "{print} {the result of} {file length times file size}",
+            "call print file length times file size"
+        ],
+        [
+            "{for each} line {from} all lines",
+            "for each line in all lines"
+        ],
+        [
+            "{for each} {character} {from} the string",
+            "for each char in string"
+        ],
+        [
+            "double {each} {element} {from} the array",
+            "map double array"
+        ],
+        [
+            "{call} triple on {each} {element} {from} the array",
+            "map triple array"
+        ],
+        [
+            "{if} a {is greater than} c {then} {call} f {with} {argument}s a and b {else} {call} f with {argument}s b and c",
+            "if a greater than c then call f a b else call f b c"
+        ],
+        [
+            "{if} a {is greater than} c {then} {return} a {else} {return} c",
+            "if a greater than c then return a else return c"
+        ],
+        [
+            "{print} all lines",
+            "call print all lines"
+        ],
+        [
+            "{define a function} fibonacci {that takes} {one} {argument} n",
+            "function fibonacci one argument n"
+        ],
+        [
+            "{if} n {is less than} 2 {then} {return} n",
+            "if n less than 2 then return n"
+        ],
+        [
+            "{else} recursively {call} f {with} n minus one and n minus {two} and return the result",
+            "else return call f n minus 1 n minus 2"
+        ],
+        [
+            "{else} {return} {call} f {with} n minus one and n minus {two}",
+            "else return f n minus one n minus two"
+        ],
+        [
+            "{if} d {is in} the string {then} {print} string",
+            "if d in string then call print string"
+        ],
+        [
+            "{if} the string {contains} d {then} {print} string",
+            "if string contains d then call print string"
+        ],
+        [
+            "{take the average} of variable one and variable {two}",
+            "mean variable one and variable two"
+        ],
+        [
+            "store {the result of} {calling} f {with} x in y",
+            "set y to f x"
+        ],
+        [
+            "{let} y {equal} {the result of} {calling} double {with} x",
+            "set y to double x"
+        ],
+        [
+            "{let} product discount {equal} {my variable minus their variable}",
+            "set product discount to my variable minus their variable"
+        ],
+        [
+            "{append} result {to the end of} the product list",
+            "append result to product list"
+        ],
+        [
+            "{prepend} result {at the front of} the product list",
+            "prepend result to product list"
+        ]
+    ],
+    "anmol-templates": [
+        [
+            "{define a function} hello world {that}",
+            "function hello world zero arguments"
+        ],
+        [
+            "prints hello world",
+            "call print hello world"
+        ],
+        [
+            "{define a function} {that takes} two {argument}s dictionary n and string input",
+            "function [FUNC] two arguments n input"
+        ],
+        [
+            "returns input in n if n {is in} input {else} zero",
+            "return n input if n in input else zero"
+        ],
+        [
+            "{define a function} read from file {that takes} {argument} string filename",
+            "function read from file one argument filename"
+        ],
+        [
+            "with open filename as fin",
+            "with open filename as fin"
+        ],
+        [
+            "{return} fin read all lines",
+            "return fin read all lines"
+        ],
+        [
+            "{return} fin read {each} line",
+            "return fin read all lines"
+        ],
+        [
+            "{call} print on everything in cities",
+            "for element in city call print city"
+        ],
+        [
+            "{call} print on {each} {element} in cities",
+            "for element in city call print city"
+        ],
+        [
+            "{define a function} {that takes} name",
+            "function [FUNC] one argument name"
+        ],
+        [
+            "{return} hi plus name",
+            "return hi plus name"
+        ]
+    ],
+    "sam-templates": [
+        [
+            "{define a function} hello",
+            "function hello zero args"
+        ],
+        [
+            "{print} hello world",
+            "call print hello world"
+        ],
+        [
+            "{define a function} called is palindrome {that takes} one {argument} called s",
+            "function is palindrome one argument s"
+        ],
+        [
+            "{let} reversed {equal} s followed by open bracket colon colon negative one close bracket",
+            "reversed equals s open bracket colon colon negative one close bracket"
+        ],
+        [
+            "{return} reversed equals s",
+            "return reversed equals s"
+        ],
+        [
+            "{define a function} fibonacci {that takes} one {argument} n",
+            "function fibonacci one argument s"
+        ],
+        [
+            "{if} n {is less than} or equal to {two}",
+            "if n less than or equal two"
+        ],
+        [
+            "{return} n",
+            "return n"
+        ],
+        [
+            "{else}",
+            "else"
+        ],
+        [
+            "{return} fibonacci of n minus one plus fibonacci of n minus two",
+            "return fibonacci n minus one plus fibonacci n minus two"
+        ],
+        [
+            "with open filename as file",
+            "with open filename as file"
+        ],
+        [
+            "{print} file dot read",
+            "call print file dot read"
+        ],
+        [
+            "{let} doubled {equal} {the result of} applying double to {each} {element} {from} the list",
+            "let doubled equal double element for each element in the list"
+        ],
+        [
+            "let dictionary sam to twenty two",
+            "dictionary sam equal twenty-two"
+        ],
+        [
+            "{define a function} greet {that takes} {one} {argument} name",
+            "function greet one argument name"
+        ],
+        [
+            "{print} hello space name",
+            "call print hello space name"
+        ]
+    ]
+}
