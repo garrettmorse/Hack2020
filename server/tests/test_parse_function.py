@@ -35,12 +35,12 @@ def test_multi_word_func_one_arg() -> None:
     assert engine.tokens == "".split()
 
 
-def test_multi_word_func_one_multi_word_arg() -> None:
-    tokens = "function read file one argument file location".split()
+# def test_multi_word_func_one_multi_word_arg() -> None:
+#     tokens = "function read file one argument file location".split()
 
-    engine = RuleEngine(tokens)
+#     engine = RuleEngine(tokens)
 
-    code = Code()
+#     code = Code()
 
-    assert engine.parse_function(code) == "def read_file(file_location):"
-    assert engine.tokens == "".split()
+#     assert engine.parse_function(code) == "def read_file(file_location):"
+#     assert engine.tokens == "".split()
