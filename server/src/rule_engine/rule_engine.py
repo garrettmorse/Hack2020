@@ -1,4 +1,7 @@
-from typing import Callable, Dict, Iterable, List, Literal, Optional, Tuple
+from typing import Callable, Dict, Iterable, List, Optional, Tuple
+
+from src.state_engine.code import Line
+from typing_extensions import Literal
 
 from ..state_engine import Code
 from . import utils
@@ -108,11 +111,15 @@ class RuleEngine:
             "prepend": self.parse_prepend,
             "return": self.parse_return,
             "tabout": self.parse_tabout,
+            "delete": self.parse_delete,
+            "goto": self.parse_goto,
         }
 
         while self.tokens and self.peek() in parse_fns:
+            spec = self.peek()
             parsed_line = parse_fns[self.peek()](code)
-            code.add_line(parsed_line)
+            if spec != "goto" and spec != "delete":
+                code.add_line(parsed_line)
 
         return code
 
@@ -376,3 +383,47 @@ class RuleEngine:
         else:
             self.putback(variable[i:])
             return "_".join(variable[:i])
+
+    def parse_goto(self, code: Code) -> None:
+        """
+        GOTO line 58
+
+        GOTO line END
+
+        GOTO line BEGINNING
+        """
+        self.check_next("goto")
+        self.pop()
+        self.check_next("line")
+        self.pop()
+
+        if self.peek() == "end":
+            self.pop()
+            code.set_cursor_to_end()
+        elif self.peek() == "beginning":
+            self.pop()
+            code.set_cursor_to_beginning()
+        else:
+            line_num = self.parse_variable(code)
+            code.set_cursor(int(line_num))
+
+    def parse_delete(self, code: Code) -> None:
+        """
+        DELETE line 58
+
+        DELETE line END
+        """
+        assert self.peek() == "delete"
+        self.pop()
+        self.check_next("line")
+        self.pop()
+
+        if self.peek() == "end":
+            self.pop()
+            code.delete_last_line()
+        elif self.peek() == "beginning":
+            self.pop()
+            code.delete_first_line()
+        else:
+            line_num = self.parse_variable(code)
+            code.delete_line(int(line_num))

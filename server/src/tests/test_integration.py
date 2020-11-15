@@ -7,25 +7,25 @@ from src import RuleEngine
 from src.state_engine import Code
 
 
-@pytest.mark.skip(reason="always fails")
+@pytest.mark.skip(reason="its a miracle any of this works")
 def test_fizz_buzz() -> None:
-    rule_engine = RuleEngine()
+
     code = Code()
+    rule_engine = RuleEngine()
+    assert code.print_lines() == ""
 
     tokens = "function fizz buzz zero arguments".split()
     rule_engine.add_tokens(tokens)
     code = rule_engine.parse(code)
 
-    assert code.print_lines() == "def fizz_buzz():\n"
+    assert code.print_lines() == "def fizz_buzz():"
     assert rule_engine.tokens == []
-
-    tokens = "if call len file location is less than twelve then".split()
 
     tokens = "for x in range zero to 100".split()
     rule_engine.add_tokens(tokens)
     code = rule_engine.parse(code)
 
-    assert code.print_lines() == "def fizz_buzz():\n\tfor x in range(0, 100):\n"
+    assert code.print_lines() == "def fizz_buzz():\n\tfor x in range(0, 100):"
     assert rule_engine.tokens == []
 
     tokens = "if x modulo three equals zero and x modulo five equals zero then".split()
@@ -34,7 +34,7 @@ def test_fizz_buzz() -> None:
 
     assert (
         code.print_lines()
-        == "def fizz_buzz():\n\tfor x in range(0, 100):\n\t\tif x % 3 == 0 and x % 5 == 0:\n"
+        == "def fizz_buzz():\n\tfor x in range(0, 100):\n\t\tif x % 3 == 0 and x % 5 == 0:"
     )
     assert rule_engine.tokens == []
 
@@ -44,7 +44,7 @@ def test_fizz_buzz() -> None:
 
     assert (
         code.print_lines()
-        == "def fizz_buzz():\n\tfor x in range(0, 100):\n\t\tif x % 3 == 0 and x % 5 == 0:\n\t\t\tprint(fizz_buzz)\n"  # TODO
+        == "def fizz_buzz():\n\tfor x in range(0, 100):\n\t\tif x % 3 == 0 and x % 5 == 0:\n\t\t\tprint(fizz_buzz)"  # TODO
     )
     assert rule_engine.tokens == []
 
@@ -54,7 +54,7 @@ def test_fizz_buzz() -> None:
 
     assert (
         code.print_lines()
-        == "def fizz_buzz():\n\tfor x in range(0, 100):\n\t\tif x % 3 == 0 and x % 5 == 0:\n\t\t\tprint(fizz_buzz)\n\t\t\t \n\t\t \n"
+        == "def fizz_buzz():\n\tfor x in range(0, 100):\n\t\tif x % 3 == 0 and x % 5 == 0:\n\t\t\tprint(fizz_buzz)\n\t\t\t \n\t\t "
     )
     assert rule_engine.tokens == []
 
@@ -64,7 +64,7 @@ def test_fizz_buzz() -> None:
 
     assert (
         code.print_lines()
-        == "def fizz_buzz():\n\tfor x in range(0, 100):\n\t\tif x % 3 == 0 and x % 5 == 0:\n\t\t\tprint(fizz_buzz)\n\t\t\t \n\t\t \n\t\telse:\n\t\t\tif x % 3 == 0:\n\t\t\t\tprint(fizz)\n"
+        == "def fizz_buzz():\n\tfor x in range(0, 100):\n\t\tif x % 3 == 0 and x % 5 == 0:\n\t\t\tprint(fizz_buzz)\n\t\t\t \n\t\t \n\t\telse:\n\t\t\tif x % 3 == 0:\n\t\t\t\tprint(fizz)"
     )
     assert rule_engine.tokens == []
 
