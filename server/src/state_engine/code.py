@@ -20,15 +20,29 @@ class Code:
         self.symbols = Symbols()
         self.symbols.add_function_symbol("print", "arg")
         self.symbols.add_function_symbol("len", "arg")
+        self.cursor_position = 0
 
     def add_line(self, value: str, tab_out_number: int = 0) -> None:
         self.print_lines_cache = None
-        self.lines.append(Line(value, len(self.lines) + 1, self.global_tab_number))
+        self.lines.insert(
+            self.cursor_position,
+            Line(value, len(self.lines) + 1, self.global_tab_number),
+        )
 
         if value[-1] == ":":
             self.global_tab_number += 1
         if tab_out_number != 0:
             self.global_tab_number -= tab_out_number
+
+        self.cursor_position += 1
+
+    def delete_line(self, line: int) -> None:
+        self.print_lines_cache = None
+        if line < 0 or line > len(self.lines):
+            return
+        self.lines = self.lines[0:line] + self.lines[line + 1 :]
+
+        self.cursor_position -= 1
 
     def print_lines(self) -> str:
         if not self.print_lines_cache:
@@ -37,6 +51,20 @@ class Code:
             ]
             self.print_lines_cache = "".join(results).rstrip()
         return self.print_lines_cache
+
+    def set_cursor(self, line: int) -> None:
+        if line < 0:
+            self.set_cursor_to_beginning()
+        elif line > len(self.lines):
+            self.set_cursor_to_end()
+        else:
+            self.cursor_position = line
+
+    def set_cursor_to_beginning(self) -> None:
+        self.cursor_position = 0
+
+    def set_cursor_to_end(self) -> None:
+        self.cursor_position = len(self.lines)
 
     @classmethod
     def from_raw(self: Type[Code], raw_code: str) -> Code:
