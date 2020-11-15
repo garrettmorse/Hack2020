@@ -51,7 +51,7 @@ class Code:
         self.delete_line(1)
 
     def delete_last_line(self) -> None:
-        self.delete_last_line(len(self.lines))
+        self.delete_line(len(self.lines))
 
     def print_lines(self) -> str:
         if not self.print_lines_cache:

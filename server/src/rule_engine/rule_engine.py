@@ -1,4 +1,6 @@
-from typing import Callable, Dict, Iterable, List, Literal, Optional, Tuple
+from src.state_engine.code import Line
+from typing import Callable, Dict, Iterable, List, Optional, Tuple
+from typing_extensions import Literal
 
 from ..state_engine import Code
 from . import utils
@@ -87,6 +89,9 @@ class RuleEngine:
     def check_next(self, tok: str) -> None:
         assert self.peek() == tok, f"next token '{self.peek()}' is not '{tok}'"
 
+    def putback(self, tokens: List[str]) -> None:
+        self.tokens = tokens + self.tokens
+
     def parse(self, code: Code) -> Code:
         """
         Consumes tokens from self.tokens and returns a new Code with additional lines.
@@ -96,18 +101,31 @@ class RuleEngine:
         parse_fns: Dict[str, ParseFunc] = {
             "for": self.parse_for,
             "if": self.parse_if,
+            "else": self.parse_else,
             "set": self.parse_set,
             "function": self.parse_function,
             "call": self.parse_call,
             "append": self.parse_append,
             "prepend": self.parse_prepend,
+            "return": self.parse_return,
+            "tabout": self.parse_tabout,
+            "delete" : self.parse_delete,
+            "goto": self.parse_goto
         }
 
         while self.tokens and self.peek() in parse_fns:
+            spec = self.peek()
             parsed_line = parse_fns[self.peek()](code)
-            code.add_line(parsed_line)
+            if spec != "goto" and spec != "delete":
+                code.add_line(parsed_line)
 
         return code
+
+    def parse_tabout(self, code: Code) -> str:
+        self.check_next("tabout")
+        self.pop()
+        code.add_line(" ", tab_out_number=1)
+        return " "
 
     def parse_function(self, code: Code) -> str:
         self.check_next("function")
@@ -137,10 +155,10 @@ class RuleEngine:
                 and_i = stop_i
             params.append("_".join(tokens[arg_i + num_args - 1 : and_i]))
 
-            code.symbols.add_function_symbol(func_name, *params)
-
         if last_param:
             params.append(last_param)
+
+        code.symbols.add_function_symbol(func_name, *params)
 
         paramstr = ", ".join(params)
         self.tokens = tokens[stop_i:]
@@ -153,11 +171,25 @@ class RuleEngine:
         self.check_next("call")
         self.pop()
         func_name = self.parse_variable(code, context="function")
-        _, num_params = code.symbols.get_function(func_name)
+        if func_name not in code.symbols.function_symbols:
+            self.putback(func_name.split("_"))
+            func_name = self.pop()
 
-        params = []
-        for i in range(num_params):
-            params.append(self.parse_expression(code))
+            stop_i, _ = self.find_next(self.tokens, PrimaryKeywords.values())
+            if stop_i < 0:
+                stop_i = len(self.tokens)
+
+            params = self.tokens[:stop_i]
+
+            num_params = len(params)
+            self.popmany(num_params)
+        else:
+            func_symbol = code.symbols.function_symbols[func_name]
+            num_params = len(func_symbol.parameters)
+
+            params = []
+            for i in range(num_params):
+                params.append(self.parse_expression(code))
 
         param_str = ", ".join(params)
         return f"{func_name}({param_str})"
@@ -194,11 +226,12 @@ class RuleEngine:
         """
         SET x to y
         """
-        tokens = self.tokens[1:]
-        to_i, _ = self.find_next_specific(tokens, SecondaryKeywords.TO)
-        name = "_".join(tokens[:to_i])
+        self.check_next("set")
+        self.pop()
+        name = self.parse_variable(code)
 
-        self.tokens = tokens[to_i + 1 :]
+        self.check_next("to")
+        self.pop()
         expr = self.parse_expression(code)
 
         code.symbols.add_variable_symbol(name)
@@ -271,21 +304,35 @@ class RuleEngine:
             "times": "*",
             "plus": "+",
             "minus": "-",
+            "modulo": "%",
             "greater_than": ">",
             "greater_than_or_equal_to": ">=",
             "less_than": "<",
+            "equals": "==",
+            "and": "and",
         }
 
         expression.append(self.parse_variable(code))
 
-        if self.tokens and self.peek() in ops:
-            expression.append(ops[self.pop()])
-            expression.append(self.parse_expression(code))
-        elif self.tokens and self.peek() == "dot":
+        if self.tokens and self.peek() == "dot":
             self.pop()  # discard .
-            expression[-1] += "." + self.parse_variable(code)
+            obj = expression[0]
+            method = self.parse_variable(code)
 
-        return " ".join(expression)
+            if obj in code.symbols.variable_symbols:
+                left = f"{obj}.{method}"
+            else:
+                return f"'{obj}.{method}'"
+        else:
+            left = " ".join(expression)
+
+        if self.tokens and self.peek() in ops:
+            op = ops[self.pop()]
+            right = self.parse_expression(code)
+
+            return " ".join([left, op, right])
+        else:
+            return left
 
     def parse_variable(
         self, code: Code, context: Literal["function", "variable"] = "variable"
@@ -313,10 +360,63 @@ class RuleEngine:
         while self.tokens and (self.peek() not in keywords):
             variable.append(self.pop())
 
-        try:
-            num = utils.text2int(" ".join(variable))
-            return str(num)
-        except ValueError:
-            pass
+        if not variable:
+            return ""
 
-        return "_".join(variable)
+        for i, chunk in enumerate(variable):
+            success, num = utils.safe_text2int(chunk)
+            if success:
+                break
+        else:
+            return "_".join(variable)
+
+        if i == 0:
+            self.putback(variable[i + 1 :])
+            return str(num)
+        else:
+            self.putback(variable[i:])
+            return "_".join(variable[:i])
+
+    def parse_goto(self, code: Code) -> None:
+        """
+        GOTO line 58
+
+        GOTO line END
+
+        GOTO line BEGINNING
+        """
+        self.check_next("goto")
+        self.pop()
+        self.check_next("line")
+        self.pop()
+
+        if self.peek() == "end":
+            self.pop()
+            code.set_cursor_to_end()
+        elif self.peek() == "beginning":
+            self.pop()
+            code.set_cursor_to_beginning()
+        else:
+            line_num = self.parse_variable(code)
+            code.set_cursor(int(line_num))
+
+    def parse_delete(self, code: Code) -> None:
+        """
+        DELETE line 58
+
+        DELETE line END
+        """
+        assert self.peek() == "delete"
+        self.pop()
+        self.check_next("line")
+        self.pop()
+
+        if self.peek() == "end":
+            self.pop()
+            code.delete_last_line()
+        elif self.peek() == "beginning":
+            self.pop()
+            code.delete_first_line()
+        else:
+            line_num = self.parse_variable(code)
+            code.delete_line(int(line_num))
