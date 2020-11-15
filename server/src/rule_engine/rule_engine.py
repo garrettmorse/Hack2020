@@ -133,14 +133,12 @@ class RuleEngine:
         if num_args > 0:
             params = tokens[arg_i + 1 : arg_i + num_args - 1]
 
-            if and_i < 0:
-                and_i = stop_i
-            params.append("_".join(tokens[arg_i + num_args - 1 : and_i]))
-
-            code.symbols.add_function_symbol(func_name, *params)
-
-        if last_param:
-            params.append(last_param)
+        param_tokens = tokens[arg_i + 1 : and_i]
+        i = 0
+        while i < num_args - 1:
+            params[i] = param_tokens[i]
+            i += 1
+        params[i] = "_".join(param_tokens[i:])
 
         paramstr = ", ".join(params)
         self.tokens = tokens[stop_i:]
