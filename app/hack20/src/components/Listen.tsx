@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import { Button, Container, Header } from 'semantic-ui-react';
+import { Button, Container, Header, Segment, Portal } from 'semantic-ui-react';
 import Siriwave from 'react-siriwave';
-import AppRoutes from '../service/app-routes';
+import { async } from 'q';
 
 const Listen = (props: any) => {
     const [showTranscript, setShowTranscript] = useState<boolean>(false);
+
+    const [open, setOpen] = useState<boolean>(false); // for use with voice commands portal
     useEffect(() => {
         SpeechRecognition.startListening({ continuous: true });
     }, []);
@@ -33,9 +35,11 @@ const Listen = (props: any) => {
         {
             command: '*execute code',
             callback: async () => {
-                await props.executeCode();
-                console.log('code executed');
-                resetTranscript();
+                if (!showTranscript) {
+                    await props.executeCode();
+                    console.log('code executed');
+                    resetTranscript();
+                }
             }
         },
         {
@@ -54,30 +58,96 @@ const Listen = (props: any) => {
             }
         },
         {
-            command: '*undo',
+            command: '*undo code',
             callback: async () => {
-                await AppRoutes.undoCode()
-                    .then(res => {
-                        props.onChangeCode(res.data.code);
-                    });
+                if (!showTranscript) {
+                    await props.handleUndo();
+                }
+            }
+        },
+        {
+            command: '*voice commands',
+            callback: async () => {
+                setOpen(!open);
+            }
+        },
+        {
+            command: '*clear output',
+            callback: async () => {
+                props.handleOutputClear();
             }
         }
     ]
-    const { transcript, finalTranscript, resetTranscript } = useSpeechRecognition({ commands });
 
+    const { transcript, finalTranscript, resetTranscript } = useSpeechRecognition({ commands });
+    const handleOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+    // const buttonOffset = showTranscript ? 73 : 90;
+    const toggleOpacity = showTranscript ? 0.2 : 1;
     return (
         <div>
             <Header as='h3'>Record Speech</Header>
 
             <Container>
-                <Button style={{ position: 'fixed', top: 2, right: 0, cursor: 'pointer', zIndex: 1000 }}
-                    color={showTranscript ? 'blue' : undefined}
-                    onClick={async () => {
-                        resetTranscript();
-                        setShowTranscript(true);
-                    }}>
-                    Record
-            </Button>
+                <Portal
+                    open={open}
+                >
+                    <Segment
+                        style={{
+                            right: '1%',
+                            position: 'fixed',
+                            top: '5%',
+                            zIndex: 1000,
+                            opacity: toggleOpacity
+                        }}
+                    >
+                        {/* To start recording, say 'Start Recording'. To send your message, say 'Send Message'. To clear the transcript, say 'Clear Recording'. To toggle this menu, say 'Voice Commands'. To stop the recording, say 'Stop Recording'. To execute code, say 'Execute Code'. To undo code, say 'Undo Code'. */}
+                        <Header>Voice Commands</Header>
+                        <p><strong>While Recording</strong></p>
+                        <ul>
+                            <li>Send Message</li>
+                            <li>Stop Recording</li>
+                        </ul>
+                        <p><strong>While Not Recording</strong></p>
+                        <ul>
+                            <li>Execute Code</li>
+                            <li>Undo Code</li>
+                            <li>Start Recording</li>
+                        </ul>
+                        <p><strong>At Any Time</strong></p>
+                        <ul>
+                            <li>Voice Commands</li>
+                            <li>Clear Recording</li>
+                            <li>Clear Output</li>
+                        </ul>
+                    </Segment>
+                </Portal>
+                {showTranscript ?
+                    (<Button
+                        style={{ position: 'fixed', top: 2, right: 0, cursor: 'pointer', zIndex: 1000 }}
+                        color='red'
+                        onClick={async () => {
+                            resetTranscript();
+                            setShowTranscript(false);
+                        }}>
+                        Stop
+                    </Button>) :
+
+                    (<Button
+                        style={{ position: 'fixed', top: 2, right: 0, cursor: 'pointer', zIndex: 1000 }}
+                        color='blue'
+                        onClick={async () => {
+                            resetTranscript();
+                            setShowTranscript(true);
+                        }}>
+                        Record
+                    </Button>)}
+
                 <div style={{ background: 'white' }}>
                     {showTranscript ? (<Siriwave cover={true} amplitude={showTranscript ? 1 : 0.01} style='ios9' />) : null}
                 </div>
