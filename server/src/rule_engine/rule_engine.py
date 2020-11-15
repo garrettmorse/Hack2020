@@ -90,7 +90,10 @@ class RuleEngine:
         code.add_line(code_str)
         return code
 
-    def parse_expression(self, tokens: List[str], code: Code):
+    def parse_expression(self, tokens: List[str], code: Code) -> str:
+        pass
+
+    def parse_variable(self, tokens: List[str], code: Code) -> str:
         pass
 
     def parse_function(self, code: Code) -> str:
@@ -107,26 +110,35 @@ class RuleEngine:
             params[-1] = "_".join(tokens[and_i + 1:stop_i])
             num_args = num_args - 1
 
-        param_tokens = tokens[:and_i]
-        i = 0
-        while i < num_args - 1:
-            params[i] = param_tokens[i]
-            i += 1
-        params[i] = "_".join(param_tokens[i:])
+        params = tokens[:num_args - 1]
 
-        # self.symbols[func_name] = Symbol() TODO when symbols get defined
+        params.append("_".join(tokens[num_args - 1:and_i]))
+
+        code.symbols.add(func_name, *params)
 
         paramstr = ", ".join(params)
         self.tokens = tokens[stop_i:]
         return f"def {func_name}({paramstr}):\n"
 
     def parse_call(self, code: Code) -> str:
-        tokens = self.tokens
-        # TODO when symbols are defined.
-        pass
+        """
+        CALL print file length times file size
+        """
+        assert self.peek() == "call"
+        self.pop()
+        func_name = self.parse_variable(code, context="function")
+        _, num_params = code.symbol.get_function(func_name)
+
+        params = []
+        for i in range(num_params):
+            params.append(self.parse_expression(code))
+
+        param_str = ", ".join(params)
+        return f"{func_name}({param_str})"
 
     def parse_return(self, code: Code) -> str:
-        self.tokens = self.tokens[1:]
+        assert self.peek() == "return"
+        self.pop()
         expr = self.parse_expression(code)
         return f"return {expr}\n"
 
@@ -134,11 +146,9 @@ class RuleEngine:
         """
         IF boolean expression THEN action
         """
-        tokens = self.tokens[1:]
-
-        self.tokens = tokens
+        assert self.peek() == "if"
+        self.pop()
         expr = self.parse_expression(code)
-        tokens = self.tokens
         then_i, _ = self.find_next_specific(tokens, SecondaryKeywords.THEN)
         self.tokens = tokens[then_i + 1:]
         return f"if {expr}:"
@@ -147,8 +157,8 @@ class RuleEngine:
         """
         ELSE action
         """
-        tokens = self.tokens[1:]
-        self.tokens = tokens
+        assert self.peek() == "else"
+        self.pop()
         return f"else:"
 
     def parse_set(self, code: Code) -> str:
@@ -162,7 +172,7 @@ class RuleEngine:
         self.tokens = tokens[to_i + 1:]
         expr = self.parse_expression(code)
 
-        # Update Symbols TODO
+        code.symbols.add_variable_symbol(name)
 
         return f"{name} = {expr}"
 
@@ -170,31 +180,31 @@ class RuleEngine:
         """
         APPEND result TO product list
         """
-        tokens = self.tokens[1:]
-        to_i, _ = self.find_next_specific(tokens, SecondaryKeywords.TO)
-        stop_i, _ = self.find_next(tokens, PrimaryKeywords)
-        # Might use the symbols here witha  find_best_match function
-        try_ele = "_".join(tokens[:to_i])
-        col = "_".join(tokens[to_i + 1:stop_i])
+        assert self.peek() == "append"
+        self.pop()
 
-        self.tokens = tokens[stop_i:]
-        # TODO update symbols?
-        return f"{col}.append({try_ele})"
+        ele = self.parse_expression(code)
+
+        assert self.peek() == "to"
+        self.pop()
+
+        col = self.parse_variable(code, context="variable")
+        return f"{col}.append({ele})"
 
     def parse_prepend(self, code: Code) -> str:
         """
         PREPEND result TO product list
         """
-        tokens = self.tokens[1:]
-        to_i, _ = self.find_next_specific(tokens, SecondaryKeywords.TO)
-        stop_i, _ = self.find_next(tokens, PrimaryKeywords)
-        # Might use the symbols here witha  find_best_match function
-        try_ele = "_".join(tokens[:to_i])
-        col = "_".join(tokens[to_i + 1:stop_i])
+        assert self.peek() == "prepend"
+        self.pop()
 
-        self.tokens = tokens[stop_i:]
-        # TODO update symbols?
-        return f"{col}.insert(0, {try_ele})"
+        ele = self.parse_expression(code)
+
+        assert self.peek() == "to"
+        self.pop()
+
+        col = self.parse_variable(code, context="variable")
+        return f"{col}.insert(0, {ele})"
 
     def parse_for(self, code: Code) -> str:
         """
@@ -204,27 +214,23 @@ class RuleEngine:
 
         FOR var IN RANGE num1 TO num2
         """
-        tokens = self.tokens[1:]
-        in_i, _ = self.find_next_specific(tokens, SecondaryKeywords.IN)
-        stop_i, _ = self.find_next(tokens, PrimaryKeywords)
+        assert self.peek() == "for"
+        self.pop()
 
-        iter_var = "_".join(tokens[:in_i])
-        # iter_var = find_best_match(iter_var)
-        self.symbols[iter_var] = Symbol(iter_var, {"type": "literator"})  # TODO
-        range_i, _ = self.find_next_specific(tokens[:stop_i], SecondaryKeywords.RANGE)
+        iter_var = self.parse_variable(code, context="variable")
 
-        self.tokens = tokens[stop_i:]
-        if range_i != -1:
-            # collection is a numerical range
-            to_i, _ = self.find_next_specific(tokens, SecondaryKeywords.TO)
-            x1 = "_".join(tokens[range_i + 1: to_i])
-            x2 = "_".join(tokens[to_i + 1:stop_i])
-            """
-            x1 = find_best_match(x1)
-            x2 = find_best_match(x2)
-            """
-            return f"for {iter_var} in range({x1}, {x2}):\n"
+        assert self.peek() == "in"
+        self.pop()
+
+        if self.peek() == "range":
+            self.pop()
+            r1 = self.parse_expression(code)
+
+            assert self.peek() == "to"
+            self.pop()
+            r2 = self.parse_expression(code)
+
+            return f"for {iter_var} in range({r1}, {r2}):"
         else:
-            col = "_".join(tokens[in_i + 1:stop_i])
-            # col = find_best_match(col)
-            return f"for {iter_var} in {col}:\n"
+            col = self.parse_variable(code, context="variable")
+            return f"for {iter_var} in {col}:"
