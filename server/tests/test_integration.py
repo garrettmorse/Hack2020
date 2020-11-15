@@ -6,7 +6,7 @@ from src import RuleEngine
 from src.state_engine import Code
 import pytest
 
-@pytest.mark.skip(reason="")
+@pytest.mark.skip(reason="its a miracle any of this works")
 def test_fizz_buzz() -> None:
 
     code = Code()
