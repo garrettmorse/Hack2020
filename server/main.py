@@ -34,7 +34,7 @@ dictConfig(
 
 # Engine Setup
 state_engine = StateEngine()
-# bart_engine = BartEngine()
+bart_engine = BartEngine()
 rule_engine = RuleEngine()
 
 # Logging
@@ -107,17 +107,15 @@ def operations_execute() -> Dict[str, Any]:
 def operations_process() -> Dict[str, Any]:
     body = request.json
     log_input(body)
-    # raw_text = body.get("transcript", None)
+    raw_text = body.get("transcript", None)
     if body.get("edited", False):
         raw_code = body.get("code", None)
         state_engine.parse_and_set_code(raw_code)
 
-    # TODO: Wait for model ~3GB
-    # raw_text has empty space at end, strip if possible
-    # tokens = bart_engine.predict(raw_text)
-    # rule_engine.add_tokens(tokens)
-    # new_code = rule_engine.parse(state_engine.code)
-    # state_engine.set_code(new_code)
+    tokens = bart_engine.predict(raw_text.strip())
+    rule_engine.add_tokens(tokens)
+    new_code = rule_engine.parse(state_engine.code)
+    state_engine.set_code(new_code)
 
     result = {"code": state_engine.print_code(), "success": True}
     log_result(result)
