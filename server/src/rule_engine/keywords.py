@@ -11,6 +11,7 @@ class PrimaryKeywords(enum.Enum):
     APPEND = "append"
     PREPEND = "prepend"
     FOR = "for"
+    TABOUT = "tabout"
 
     @staticmethod
     def list_keys():
