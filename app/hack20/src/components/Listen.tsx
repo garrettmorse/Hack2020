@@ -6,8 +6,7 @@ import { async } from 'q';
 
 const Listen = (props: any) => {
     const [showTranscript, setShowTranscript] = useState<boolean>(false);
-
-    const [open, setOpen] = useState<boolean>(false); // for use with voice commands portal
+    const [open, setOpen] = useState<boolean>(true); // for use with voice commands portal
     useEffect(() => {
         SpeechRecognition.startListening({ continuous: true });
     }, []);
@@ -54,6 +53,7 @@ const Listen = (props: any) => {
             callback: async () => {
                 setShowTranscript(false);
                 resetTranscript();
+
                 console.log('stopped listening');
             }
         },
@@ -88,7 +88,9 @@ const Listen = (props: any) => {
         setOpen(false);
     }
     // const buttonOffset = showTranscript ? 73 : 90;
-    const toggleOpacity = showTranscript ? 0.2 : 1;
+    const toggleOpacity = showTranscript ? 0.4 : 1;
+    const clearOutputOffset = showTranscript ? 218 : 92;
+    const voiceCommandsOffset = showTranscript ? 374 : 248;
     return (
         <div>
             <Header as='h3'>Record Speech</Header>
@@ -127,20 +129,45 @@ const Listen = (props: any) => {
                         </ul>
                     </Segment>
                 </Portal>
+                <Button
+                    style={{ position: 'fixed', top: 2, right: clearOutputOffset, cursor: 'pointer', zIndex: 1000 }}
+                    onClick={async () => {
+                        setOpen(!open);
+                    }}>
+                    Voice Commands
+                </Button>
+                <Button
+                    style={{ position: 'fixed', top: 2, right: voiceCommandsOffset, cursor: 'pointer', zIndex: 1000 }}
+                    onClick={async () => {
+                        props.handleOutputClear();
+                    }}>
+                    Clear Output
+                </Button>
                 {showTranscript ?
-                    (<Button
-                        style={{ position: 'fixed', top: 2, right: 0, cursor: 'pointer', zIndex: 1000 }}
-                        color='red'
-                        onClick={async () => {
-                            resetTranscript();
-                            setShowTranscript(false);
-                        }}>
-                        Stop
-                    </Button>) :
+                    (<Button.Group>
+                        <Button
+                            style={{ position: 'fixed', top: 2, right: 74, cursor: 'pointer', zIndex: 1000 }}
+                            color='yellow'
+                            onClick={async () => {
+                                resetTranscript();
+                            }}>
+                            Clear Recording
+                    </Button>
+                        <Button
+                            style={{ position: 'fixed', top: 2, right: 3, cursor: 'pointer', zIndex: 1000 }}
+                            color='red'
+                            onClick={async () => {
+                                resetTranscript();
+                                setShowTranscript(false);
+                            }}>
+                            Stop
+                    </Button>
+
+                    </Button.Group>) :
 
                     (<Button
-                        style={{ position: 'fixed', top: 2, right: 0, cursor: 'pointer', zIndex: 1000 }}
-                        color='blue'
+                        style={{ color: 'whitesmoke', backgroundColor: '#6868f6', position: 'fixed', top: 2, right: 0, cursor: 'pointer', zIndex: 1000 }}
+
                         onClick={async () => {
                             resetTranscript();
                             setShowTranscript(true);
