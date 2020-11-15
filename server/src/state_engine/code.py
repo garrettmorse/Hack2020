@@ -13,14 +13,19 @@ class Line:
 
 
 class Code:
-    def __init__(self, lines: List[Line] = [], global_tab_number: int = 0) -> None:
+    def __init__(
+        self,
+        lines: List[Line] = [],
+        global_tab_number: int = 0,
+        cursor_position: int = 0,
+    ) -> None:
         self.lines = lines
         self.global_tab_number = global_tab_number
         self.print_lines_cache: Optional[str] = None
         self.symbols = Symbols()
         self.symbols.add_function_symbol("print", "arg")
         self.symbols.add_function_symbol("len", "arg")
-        self.cursor_position = 0
+        self.cursor_position = cursor_position
 
     def add_line(self, value: str, tab_out_number: int = 0) -> None:
         self.print_lines_cache = None
@@ -86,4 +91,4 @@ class Code:
         if last_line.value and last_line.value[-1] == ":":
             global_tab_number += 1
 
-        return self(lines, global_tab_number)
+        return self(lines, global_tab_number, len(lines))

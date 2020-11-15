@@ -56,11 +56,12 @@ class RuleEngine:
         transforms = {  # order is important
             "arguments": "argument",
             "greater than or equal to": "greater_than_or_equal_to",
+            "less than or equal to": "less_than_or_equal_to",
             "greater than": "greater_than",
             "less than": "less_than",
         }
 
-        body = " ".join(tokens)
+        body = " ".join(tokens).lower()
 
         for dirty, clean in transforms.items():
             body = body.replace(dirty, clean)
@@ -302,6 +303,7 @@ class RuleEngine:
             "modulo": "%",
             "greater_than": ">",
             "greater_than_or_equal_to": ">=",
+            "less_than_or_equal_to": "<=",
             "less_than": "<",
             "equals": "==",
             "and": "and",
