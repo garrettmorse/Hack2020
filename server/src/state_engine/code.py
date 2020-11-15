@@ -6,9 +6,8 @@ from .symbols import Symbols
 
 
 class Line:
-    def __init__(self, value: str, line_number: int, tab_number: int) -> None:
+    def __init__(self, value: str, tab_number: int) -> None:
         self.value = value
-        self.line_number = line_number
         self.tab_number = tab_number
 
 
@@ -29,7 +28,7 @@ class Code:
         self.print_lines_cache = None
         self.lines.insert(
             self.cursor_position,
-            Line(value, len(self.lines) + 1, self.global_tab_number),
+            Line(value, self.global_tab_number),
         )
 
         if value[-1] == ":":
@@ -88,7 +87,7 @@ class Code:
             pos = 0
             while raw_line and pos < len(raw_line) and raw_line[pos] == "\t":
                 pos += 1
-            lines.append(Line(raw_line[pos:], index, pos))
+            lines.append(Line(raw_line[pos:], pos))
 
         last_line = lines[-1]
         global_tab_number = last_line.tab_number

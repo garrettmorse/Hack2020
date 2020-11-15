@@ -44,3 +44,13 @@ def test_multi_word_func_one_multi_word_arg() -> None:
 
     assert engine.parse_function(code) == "def read_file(file_location):"
     assert engine.tokens == "".split()
+
+def test_base() -> None:
+    tokens = "function main zero arguments".split()
+
+    engine = RuleEngine(tokens)
+
+    code = Code()
+
+    assert engine.parse_function(code) == "def main():"
+    assert engine.tokens == "".split()
