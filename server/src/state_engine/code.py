@@ -17,7 +17,7 @@ class Code:
         self,
         lines: List[Line] = [],
         global_tab_number: int = 0,
-        cursor_position: int = 0,
+        cursor_position: int = 1,
     ) -> None:
         self.lines = lines
         self.global_tab_number = global_tab_number
@@ -43,7 +43,7 @@ class Code:
         self.print_lines_cache = None
         if line < 0 or line > len(self.lines):
             return
-        self.lines = self.lines[0:line] + self.lines[line + 1 :]
+        self.lines = self.lines[0 : line - 1] + self.lines[line:]
 
         self.cursor_position -= 1
 
@@ -70,7 +70,7 @@ class Code:
             self.cursor_position = line
 
     def set_cursor_to_beginning(self) -> None:
-        self.cursor_position = 0
+        self.cursor_position = 1
 
     def set_cursor_to_end(self) -> None:
         self.cursor_position = len(self.lines)
