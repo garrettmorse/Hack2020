@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List, Optional, Type
 
 from .symbols import Symbols
 
@@ -37,7 +37,7 @@ class Code:
         return self.print_lines_cache
 
     @classmethod
-    def from_raw(self, raw_code: str) -> Code:
+    def from_raw(self: Type[Code], raw_code: str) -> Code:
         replace_dict = {"    ": "\t", "\r\n": "\n"}
         for k, v in replace_dict.items():
             raw_code = raw_code.replace(k, v)

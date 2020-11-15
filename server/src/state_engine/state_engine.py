@@ -18,8 +18,11 @@ class StateEngine:
         self.history: List[State] = []
         self.history_pos = -1
 
-    def set_code(self, raw_code: str) -> None:
-        self.code = Code.from_raw(raw_code)
+    def set_code(self, raw_code: Union[str, Code]) -> None:
+        if isinstance(raw_code, str):
+            self.code = Code.from_raw(raw_code)
+        else:
+            self.code = raw_code
         self.save_history()
 
     def print_code(self) -> str:

@@ -12,6 +12,11 @@ class PrimaryKeywords(enum.Enum):
     APPEND = "append"
     PREPEND = "prepend"
     FOR = "for"
+    TABOUT = "tabout"
+
+    @staticmethod
+    def values() -> List[str]:
+        return [e.value for e in PrimaryKeywords]
 
 
 class SecondaryKeywords(enum.Enum):
@@ -32,3 +37,7 @@ class SecondaryKeywords(enum.Enum):
     TO = "to"
     RANGE = "range"
     IN = "in"
+
+    @staticmethod
+    def values() -> List[str]:
+        return [e.value for e in SecondaryKeywords]

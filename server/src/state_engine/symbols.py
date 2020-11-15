@@ -15,6 +15,19 @@ class FunctionSymbol:
             self.parameters[name] = VariableSymbol(name)
 
 
+class VariableSymbol:
+    def __init__(self, variable_name: str) -> None:
+        self.name = variable_name
+
+
+class FunctionSymbol:
+    def __init__(self, function_name: str, parameter_names: List[str]) -> None:
+        self.name = function_name
+        self.parameters = OrderedDict()
+        for name in parameter_names:
+            self.parameters[name] = VariableSymbol(name)
+
+
 class Symbols:
     def __init__(self) -> None:
         self.function_symbols: Dict[str, FunctionSymbol] = {}
