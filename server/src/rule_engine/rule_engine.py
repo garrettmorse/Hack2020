@@ -1,10 +1,10 @@
 import sys
-from typing import List, Any
+from typing import Any, List
 
 from typing_extensions import final
-from .keywords import PrimaryKeywords, SecondaryKeywords
-from .symbol import Symbol
+
 from ..state_engine import Code, Line
+from .keywords import PrimaryKeywords, SecondaryKeywords
 
 
 class RuleEngine:

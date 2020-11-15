@@ -4,7 +4,7 @@ import sys
 from flask import Flask, request
 from flask_cors import CORS
 
-from src import Parser, RuleEngine, StateEngine
+from src import BartEngine, RuleEngine, StateEngine
 
 # Flask Setup
 app = Flask(__name__)
@@ -12,7 +12,7 @@ CORS(app)
 
 # Engine Setup
 state_engine = StateEngine()
-# parser = Parser()
+# bart_engine = BartEngine()
 rule_engine = RuleEngine()
 
 
@@ -75,7 +75,7 @@ def operations_process():
         state_engine.set_code(raw_code)
 
     # TODO: Wait for model ~3GB
-    # tokens = parser.predict(raw_text)
+    # tokens = bart_engine.predict(raw_text)
     rule_engine.add_tokens(tokens)
     new_code = rule_engine.parse(state_engine.code)
     state_engine.set_code(new_code)

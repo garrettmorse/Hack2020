@@ -1,4 +1,5 @@
 import enum
+from typing import List
 
 
 class PrimaryKeywords(enum.Enum):
@@ -11,14 +12,6 @@ class PrimaryKeywords(enum.Enum):
     APPEND = "append"
     PREPEND = "prepend"
     FOR = "for"
-
-    @staticmethod
-    def list_keys():
-        return list(map(lambda e: e.key, PrimaryKeywords))
-
-    @staticmethod
-    def list_values():
-        return list(map(lambda e: e.value, PrimaryKeywords))
 
 
 class SecondaryKeywords(enum.Enum):
@@ -39,11 +32,3 @@ class SecondaryKeywords(enum.Enum):
     TO = "to"
     RANGE = "range"
     IN = "in"
-
-    @staticmethod
-    def list_keys():
-        return list(map(lambda e: e.key, SecondaryKeywords))
-
-    @staticmethod
-    def list_values():
-        return list(map(lambda e: e.value, SecondaryKeywords))
