@@ -1,6 +1,6 @@
 
 test: FORCE
-	python -m pytest tests/ -p no:warnings
+	python -m pytest src/tests/ -p no:warnings
 
 FORCE:
 	

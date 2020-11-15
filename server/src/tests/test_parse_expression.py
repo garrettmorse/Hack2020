@@ -52,16 +52,6 @@ def test_variable_txt_twelve() -> None:
     assert engine.tokens == ["twelve"]
 
 
-def test_variable_txt_twelve() -> None:
-    tokens = "txt twelve".split()
-    engine = RuleEngine(tokens)
-
-    code = Code()
-
-    assert engine.parse_variable(code) == "txt"
-    assert engine.tokens == ["twelve"]
-
-
 def test_variable_foo_twelve() -> None:
     tokens = "foo twelve".split()
     engine = RuleEngine(tokens)

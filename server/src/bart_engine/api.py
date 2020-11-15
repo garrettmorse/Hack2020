@@ -1,4 +1,5 @@
 from typing import List
+
 from transformers import BartForConditionalGeneration, BartTokenizer
 
 
@@ -7,7 +8,11 @@ class BartEngine:
         self.model = BartForConditionalGeneration.from_pretrained("./models/bart-coder")
         self.tokenizer = BartTokenizer.from_pretrained("facebook/bart-base")
 
+    def preprocess(self, text: str) -> str:
+        return text.replace("+", "plus").replace("*", "times")
+
     def predict_batch(self, utterances: List[str]) -> List[List[str]]:
+        utterances = [self.preprocess(u) for u in utterances]
         input_encodings = self.tokenizer.batch_encode_plus(
             utterances,
             max_length=32,
@@ -30,4 +35,6 @@ class BartEngine:
         return result
 
     def predict(self, utterance: str) -> List[str]:
+        if utterance.lower() in set(["tapout", "tabout", "tab out", "tap out"]):
+            return ["tabout"]
         return self.predict_batch([utterance])[0]
