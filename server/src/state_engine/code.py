@@ -34,7 +34,7 @@ class Code:
             results = [
                 ((line.tab_number * "\t") + line.value + "\n") for line in self.lines
             ]
-            self.print_lines_cache = "".join(results)
+            self.print_lines_cache = "".join(results).rstrip()
         return self.print_lines_cache
 
     @classmethod
@@ -48,7 +48,7 @@ class Code:
 
         for index, raw_line in enumerate(raw_lines):
             pos = 0
-            while raw_line and raw_line[pos] == "\t":
+            while raw_line and pos < len(raw_line) and raw_line[pos] == "\t":
                 pos += 1
             lines.append(Line(raw_line[pos:], index, pos))
 

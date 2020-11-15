@@ -1,5 +1,7 @@
 import io
 import sys
+from logging.config import dictConfig
+from pprint import pformat
 from typing import Any, Dict
 
 from flask import Flask, request
@@ -10,39 +12,65 @@ from src import BartEngine, RuleEngine, StateEngine
 # Flask Setup
 app = Flask(__name__)
 CORS(app)
+dictConfig(
+    {
+        "version": 1,
+        "formatters": {
+            "default": {
+                "format": "[%(asctime)s] %(levelname)s in %(module)s: %(message)s",
+            }
+        },
+        "handlers": {
+            "wsgi": {
+                "class": "logging.StreamHandler",
+                "stream": "ext://flask.logging.wsgi_errors_stream",
+                "formatter": "default",
+            }
+        },
+        "root": {"level": "INFO", "handlers": ["wsgi"]},
+    }
+)
+
 
 # Engine Setup
 state_engine = StateEngine()
 # bart_engine = BartEngine()
-# rule_engine = RuleEngine()
+rule_engine = RuleEngine()
+
+# Logging
+def log_input(message: Any) -> None:
+    app.logger.info(f"Input - {pformat(message)}\n")
+
+
+def log_result(message: Any) -> None:
+    app.logger.info(f"Result - {pformat(message)}\n")
 
 
 # Routes
 @app.route("/", methods=["GET"])
-def status() -> str:
-    return "Running"
-
-
-@app.route("/operations/redo", methods=["POST"])
-def operations_redo() -> str:
-    return "NOT IMPLEMENTED EXCEPTION"
+def status() -> Dict[str, Any]:
+    result = {"success": True}
+    log_result(result)
+    return result
 
 
 @app.route("/operations/undo", methods=["POST"])
 def operations_undo() -> Dict[str, Any]:
     state_engine.undo_history()
-    return {"code": state_engine.print_code(), "success": True}
+    result = {"code": state_engine.print_code(), "success": True}
+    log_result(result)
+    return result
 
 
 @app.route("/operations/execute", methods=["POST"])
 def operations_execute() -> Dict[str, Any]:
     body = request.json
-    print(body)
+    log_input(body)
     if body.get("edited", False):
         raw_code = body.get("code", None)
-        state_engine.set_code(raw_code)
+        state_engine.parse_and_set_code(raw_code)
 
-    result = {"output": "Error. Something went wrong", "success": False}
+    code = state_engine.print_code()
 
     try:
         code_out, code_err = io.StringIO(), io.StringIO()
@@ -60,32 +88,40 @@ def operations_execute() -> Dict[str, Any]:
         code_err.close()
 
         output = output if output else error
-        result = {"output": output, "success": True}
+        result = {"code": code, "output": output, "success": True}
     except Exception as ex:
-        result = {"output": str(ex), "success": False}
+        result = {
+            "code": code,
+            "output": str(ex),
+            "success": False,
+        }
 
     sys.stdout = sys.__stdout__
     sys.stderr = sys.__stderr__
+
+    log_result(result)
     return result
 
 
 @app.route("/operations/process", methods=["POST"])
 def operations_process() -> Dict[str, Any]:
     body = request.json
-    print(body)
+    log_input(body)
     # raw_text = body.get("transcript", None)
     if body.get("edited", False):
         raw_code = body.get("code", None)
-        state_engine.set_code(raw_code)
+        state_engine.parse_and_set_code(raw_code)
 
     # TODO: Wait for model ~3GB
+    # raw_text has empty space at end, strip if possible
     # tokens = bart_engine.predict(raw_text)
-    # TODO: Fix rule_engine
     # rule_engine.add_tokens(tokens)
     # new_code = rule_engine.parse(state_engine.code)
     # state_engine.set_code(new_code)
 
-    return {"code": state_engine.print_code(), "success": True}
+    result = {"code": state_engine.print_code(), "success": True}
+    log_result(result)
+    return result
 
 
 # Main

@@ -15,6 +15,7 @@ class MyEditor extends React.Component<any, any> {
         return (
             <Container>
                 <Button
+                    color="green"
                     onClick={this.props.handleCode}
                     icon labelPosition='left' >
                     <Icon name='play' />
@@ -34,6 +35,7 @@ class MyEditor extends React.Component<any, any> {
                     onChange={this.props.onCodeChange}
                     editorProps={{ $blockScrolling: true }}
                     width='100%'
+                    height='80vh'
                     setOptions={{
                         enableBasicAutocompletion: true,
                         enableLiveAutocompletion: true,

@@ -87,9 +87,12 @@ class RuleEngine:
     def check_next(self, tok: str) -> None:
         assert self.peek() == tok, f"next token '{self.peek()}' is not '{tok}'"
 
+<<<<<<< HEAD
     def putback(self, tokens: List[str]) -> None:
         self.tokens = tokens + self.tokens
 
+=======
+>>>>>>> 62e570de9bdcae79ff2c11d3cf4869fcc2596002
     def parse(self, code: Code) -> Code:
         """
         Consumes tokens from self.tokens and returns a new Code with additional lines.
@@ -115,12 +118,15 @@ class RuleEngine:
 
         return code
 
+<<<<<<< HEAD
     def parse_tabout(self, code: Code) -> str:
         self.check_next("tabout")
         self.pop()
         code.add_line(" ", tab_out_number=1)
         return " "
 
+=======
+>>>>>>> 62e570de9bdcae79ff2c11d3cf4869fcc2596002
     def parse_function(self, code: Code) -> str:
         self.check_next("function")
         self.pop()
@@ -139,6 +145,7 @@ class RuleEngine:
         last_param = ""
         if and_i != -1:
             last_param = "_".join(tokens[and_i + 1 : stop_i])
+<<<<<<< HEAD
 
         if num_args == 1:
             params = ["_".join(tokens[arg_i + 1 : stop_i])]
@@ -198,6 +205,53 @@ class RuleEngine:
         """
         IF boolean expression THEN action
         """
+=======
+
+        if num_args == 1:
+            params = ["_".join(tokens[arg_i + 1 : stop_i])]
+        elif num_args > 0:
+            params = tokens[arg_i + 1 : arg_i + num_args - 1]
+
+            if and_i < 0:
+                and_i = stop_i
+            params.append("_".join(tokens[arg_i + num_args - 1 : and_i]))
+
+            code.symbols.add_function_symbol(func_name, *params)
+
+        if last_param:
+            params.append(last_param)
+
+        paramstr = ", ".join(params)
+        self.tokens = tokens[stop_i:]
+        return f"def {func_name}({paramstr}):"
+
+    def parse_call(self, code: Code) -> str:
+        """
+        CALL print file length times file size
+        """
+        self.check_next("call")
+        self.pop()
+        func_name = self.parse_variable(code, context="function")
+        _, num_params = code.symbols.get_function(func_name)
+
+        params = []
+        for i in range(num_params):
+            params.append(self.parse_expression(code))
+
+        param_str = ", ".join(params)
+        return f"{func_name}({param_str})"
+
+    def parse_return(self, code: Code) -> str:
+        self.check_next("return")
+        self.pop()
+        expr = self.parse_expression(code)
+        return f"return {expr}"
+
+    def parse_if(self, code: Code) -> str:
+        """
+        IF boolean expression THEN action
+        """
+>>>>>>> 62e570de9bdcae79ff2c11d3cf4869fcc2596002
         self.check_next("if")
         self.pop()
 
@@ -220,12 +274,20 @@ class RuleEngine:
         """
         SET x to y
         """
+<<<<<<< HEAD
         self.check_next("set")
         self.pop()
         name = self.parse_variable(code)
 
         self.check_next("to")
         self.pop()
+=======
+        tokens = self.tokens[1:]
+        to_i, _ = self.find_next_specific(tokens, SecondaryKeywords.TO)
+        name = "_".join(tokens[:to_i])
+
+        self.tokens = tokens[to_i + 1 :]
+>>>>>>> 62e570de9bdcae79ff2c11d3cf4869fcc2596002
         expr = self.parse_expression(code)
 
         code.symbols.add_variable_symbol(name)
@@ -281,11 +343,19 @@ class RuleEngine:
         if self.peek() == "range":
             self.pop()
             r1 = self.parse_expression(code)
+<<<<<<< HEAD
 
             assert self.peek() == "to"
             self.pop()
             r2 = self.parse_expression(code)
 
+=======
+
+            assert self.peek() == "to"
+            self.pop()
+            r2 = self.parse_expression(code)
+
+>>>>>>> 62e570de9bdcae79ff2c11d3cf4869fcc2596002
             return f"for {iter_var} in range({r1}, {r2}):"
         else:
             col = self.parse_variable(code, context="variable")
@@ -347,6 +417,28 @@ class RuleEngine:
 
         # variable not found in symbol table
 
+<<<<<<< HEAD
+=======
+    def parse_variable(
+        self, code: Code, context: Literal["function", "variable"] = "variable"
+    ) -> str:
+
+        if context == "function":
+            fn_match = code.symbols.find_best_matching_function_symbol(self.tokens)
+            if fn_match:
+                fn_symbol, consumed = fn_match
+                self.popmany(consumed)
+                return fn_symbol.name
+        else:
+            var_match = code.symbols.find_best_matching_variable_symbol(self.tokens)
+            if var_match:
+                var_symbol, consumed = var_match
+                self.popmany(consumed)
+                return var_symbol.name
+
+        # variable not found in symbol table
+
+>>>>>>> 62e570de9bdcae79ff2c11d3cf4869fcc2596002
         variable = []
 
         keywords = PrimaryKeywords.values() + SecondaryKeywords.values()
@@ -354,6 +446,7 @@ class RuleEngine:
         while self.tokens and (self.peek() not in keywords):
             variable.append(self.pop())
 
+<<<<<<< HEAD
         if not variable:
             return ""
 
@@ -370,3 +463,12 @@ class RuleEngine:
         else:
             self.putback(variable[i:])
             return "_".join(variable[:i])
+=======
+        try:
+            num = utils.text2int(" ".join(variable))
+            return str(num)
+        except ValueError:
+            pass
+
+        return "_".join(variable)
+>>>>>>> 62e570de9bdcae79ff2c11d3cf4869fcc2596002
