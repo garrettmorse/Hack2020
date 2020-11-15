@@ -46,5 +46,5 @@ class StateEngine:
         state = self.history[self.history_pos]
         self.set_state(state)
 
-    def deepcopy(self) -> StateEngine:
+    def get_deepcopy(self) -> StateEngine:
         return copy.deepcopy(self)
