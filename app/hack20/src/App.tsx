@@ -70,7 +70,8 @@ class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean
   }
 
   onOutputChange = (newOutput: string) => {
-    this.setState({ output: this.state.output + '\n-----\n' + newOutput });
+    const outputStr = this.state.output === "" ? newOutput : this.state.output + '\n-----\n' + newOutput;
+    this.setState({ output: outputStr });
     console.log(`update state.output: ${this.state.output}`);
   }
 
