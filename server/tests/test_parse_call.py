@@ -74,7 +74,7 @@ def test_call_with_multi_words() -> None:
     assert engine.tokens == "".split()
 
 
-def test_call_with_multi_words() -> None:
+def test_call_with_multi_words4() -> None:
     func_tokens = "function read file one argument file name return one".split()
 
     engine = RuleEngine(func_tokens)
@@ -89,7 +89,7 @@ def test_call_with_multi_words() -> None:
     assert engine.tokens == "".split()
 
 
-def test_call_with_multi_words() -> None:
+def test_call_with_multi_words3() -> None:
     func_tokens = (
         "function read file two arguments file name and length return length".split()
     )
@@ -107,7 +107,7 @@ def test_call_with_multi_words() -> None:
     assert engine.tokens == "".split()
 
 
-def test_call_with_multi_words() -> None:
+def test_call_with_multi_words2() -> None:
     func_tokens = (
         "function read file two arguments file name and length return length".split()
     )
