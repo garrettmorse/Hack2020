@@ -112,6 +112,7 @@ class RuleEngine:
             "tabout": self.parse_tabout,
             "remove": self.parse_delete,
             "goto": self.parse_goto,
+            "quote": self.parse_string
         }
 
         while self.tokens and self.peek() in parse_fns:
@@ -426,3 +427,16 @@ class RuleEngine:
         else:
             line_num = self.parse_variable(code)
             code.delete_line(int(line_num))
+
+    def parse_string(self, code: Code) -> str:
+        """
+        QUOTE expression QUOTE
+        """
+        assert self.peek() == "quote"
+        self.pop()
+
+        next_q_i = self.find_next_specific(self.tokens, "quote")
+        repr = '"' + " ".join(self.tokens[:next_q_i]) + '"'
+
+        self.tokens = self.tokens[:next_q_i + 1]
+        return repr

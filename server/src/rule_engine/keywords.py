@@ -41,6 +41,7 @@ class SecondaryKeywords(enum.Enum):
     IN = "in"
     MODULO = "modulo"
     BEGINNING = "beginning"
+    QUOTE = "quote"
 
     @staticmethod
     def values() -> List[str]:
