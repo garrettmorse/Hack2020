@@ -1,3 +1,4 @@
+from src.state_engine.code import Line
 from typing import Callable, Dict, Iterable, List, Optional, Tuple
 from typing_extensions import Literal
 
@@ -377,6 +378,8 @@ class RuleEngine:
         GOTO line 58
 
         GOTO line END
+
+        GOTO line BEGINNING
         """
         self.check_next("goto")
         self.pop()
@@ -386,6 +389,9 @@ class RuleEngine:
         if self.peek() == "end":
             self.pop()
             code.set_cursor_to_end()
+        elif self.peek() == "beginning":
+            self.pop()
+            code.set_cursor_to_beginning()
         else:
             line_num = self.parse_variable(code)
             code.set_cursor_to_end(int(line_num))
@@ -401,5 +407,12 @@ class RuleEngine:
         self.check_next("line")
         self.pop()
 
-        line_num = self.parse_variable(code)
-        code.delete_line(int(line_num))
+        if self.peek() == "end":
+            self.pop()
+            code.delete_last_line()
+        elif self.peek() == "beginning":
+            self.pop()
+            code.delete_first_line()
+        else:
+            line_num = self.parse_variable(code)
+            code.delete_line()

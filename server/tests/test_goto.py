@@ -3,7 +3,7 @@ from src.rule_engine.rule_engine import RuleEngine
 from src.state_engine.code import Code
 
 
-def test_delete_end() -> None:
+def test_goto_end() -> None:
     tokens = "function y two argument x and y"
     engine = RuleEngine(tokens)
 
@@ -15,7 +15,7 @@ def test_delete_end() -> None:
         rule_engine.add_tokens(tokens)
         code = rule_engine.parse(code)
 
-    tokens = "delete line end".split()
+    tokens = "goto line end".split()
     rule_engine.add_tokens(tokens)
     code = rule_engine.parse(code)
 

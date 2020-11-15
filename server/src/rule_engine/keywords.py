@@ -40,6 +40,7 @@ class SecondaryKeywords(enum.Enum):
     RANGE = "range"
     IN = "in"
     MODULO = "modulo"
+    BEGINNING = "beginning"
 
     @staticmethod
     def values() -> List[str]:
