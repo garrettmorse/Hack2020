@@ -11,6 +11,15 @@ def test_variable() -> None:
     assert engine.parse_expression(code) == "a"
 
 
+def test_variable_thirteen() -> None:
+    tokens = "thirteen".split()
+    engine = RuleEngine(tokens)
+
+    code = Code()
+
+    assert engine.parse_expression(code) == "13"
+
+
 def test_addition() -> None:
     tokens = "a plus b".split()
     engine = RuleEngine(tokens)

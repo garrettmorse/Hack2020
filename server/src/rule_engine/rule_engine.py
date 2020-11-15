@@ -1,6 +1,7 @@
 from typing import Callable, Dict, Iterable, List
 
 from ..state_engine import Code
+from . import utils
 from .keywords import PrimaryKeywords, SecondaryKeywords
 
 ParseFunc = Callable[[Code], str]
@@ -66,10 +67,10 @@ class RuleEngine:
         return tokens[1 + number :]
 
     def add_tokens(self, tokens: Iterable[str]) -> None:
-        transforms = {
+        transforms = {  # order is important
+            "greater than or equal to": "greater_than_or_equal_to",
             "greater than": "greater_than",
             "less than": "less_than",
-            "greater than or equal to": "greater_than_or_equal_to",
         }
 
         body = " ".join(tokens)
@@ -91,6 +92,9 @@ class RuleEngine:
         top = self.tokens[0]
         self.tokens = self.tokens[1:]
         return top
+
+    def check_next(self, tok: str) -> None:
+        assert self.peek() == tok, f"next token '{self.peek()} is not '{tok}'"
 
     def parse(self, code: Code) -> Code:
         """
@@ -117,10 +121,8 @@ class RuleEngine:
         code.add_line(code_str)
         return code
 
-    def parse_expression(self, tokens: List[str], code: Code):
-        pass
-
     def parse_function(self, code: Code) -> str:
+        self.check_next("function")
         tokens = self.tokens[1:]
         arg_i, _ = self.find_next_specific(tokens, SecondaryKeywords.ARGUMENT)
         stop_i, _ = self.find_next(tokens, PrimaryKeywords)
@@ -159,13 +161,13 @@ class RuleEngine:
         """
         IF boolean expression THEN action
         """
-        tokens = self.tokens[1:]
+        self.check_next("if")
+        self.pop()
 
-        self.tokens = tokens
         expr = self.parse_expression(code)
-        tokens = self.tokens
-        then_i, _ = self.find_next_specific(tokens, SecondaryKeywords.THEN)
-        self.tokens = tokens[then_i + 1 :]
+        self.check_next("then")
+        self.pop()
+
         return f"if {expr}:"
 
     def parse_else(self, code: Code) -> str:
@@ -263,6 +265,7 @@ class RuleEngine:
             "plus": "+",
             "minus": "-",
             "greater_than": ">",
+            "greater_than_or_equal_to": ">=",
             "less_than": "<",
         }
 
@@ -284,5 +287,11 @@ class RuleEngine:
 
         while self.tokens and (self.peek() not in keywords):
             variable.append(self.pop())
+
+        try:
+            num = utils.text2int(" ".join(variable))
+            return str(num)
+        except ValueError:
+            pass
 
         return "_".join(variable)
