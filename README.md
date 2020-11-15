@@ -8,7 +8,7 @@ Anmol Takiar, Sam Stevens, Garrett Morse, Jason Guo
 
 ## Results
 
-TBD
+Best UI/UX and Buckeye's Choice Award
 
 ## Demo
 
