@@ -1,13 +1,22 @@
-from .line import Line
+from __future__ import annotations
+
+from typing import List, Optional
+
+
+class Line:
+    def __init__(self, value: str, line_number: int, tab_number: int) -> None:
+        self.value = value
+        self.line_number = line_number
+        self.tab_number = tab_number
 
 
 class Code:
-    def __init__(self, lines=[], global_tab_number=0):
+    def __init__(self, lines: List[Line] = [], global_tab_number: int = 0) -> None:
         self.lines = lines
         self.global_tab_number = global_tab_number
-        self.print_lines_cache = None
+        self.print_lines_cache: Optional[str] = None
 
-    def add_line(self, value: str, tab_out_number: int = 0):
+    def add_line(self, value: str, tab_out_number: int = 0) -> None:
         self.print_lines_cache = None
         self.lines.append(Line(value, len(self.lines) + 1, self.global_tab_number))
 
@@ -16,7 +25,7 @@ class Code:
         if tab_out_number != 0:
             self.global_tab_number -= tab_out_number
 
-    def print_lines(self):
+    def print_lines(self) -> str:
         if not self.print_lines_cache:
             results = [
                 ((line.tab_number * "\t") + line.value + "\n") for line in self.lines
@@ -25,7 +34,7 @@ class Code:
         return self.print_lines_cache
 
     @classmethod
-    def from_raw(self, raw_code: str):
+    def from_raw(self, raw_code: str) -> Code:
         replace_dict = {"    ": "\t", "\r\n": "\n"}
         for k, v in replace_dict.items():
             raw_code = raw_code.replace(k, v)
@@ -44,4 +53,4 @@ class Code:
         if last_line.value and last_line.value[-1] == ":":
             global_tab_number += 1
 
-        return self(last_line, global_tab_number)
+        return self(lines, global_tab_number)

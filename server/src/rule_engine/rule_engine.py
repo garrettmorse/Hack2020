@@ -1,14 +1,18 @@
-import sys
-from typing import List, Any
+from typing import Callable, Dict, Iterable, List
 
-from typing_extensions import final
+from ..state_engine import Code
 from .keywords import PrimaryKeywords, SecondaryKeywords
 from .symbol import Symbol
-from ..state_engine import Code, Line
+
+ParseFunc = Callable[[Code], str]
 
 
 class RuleEngine:
-    def __init__(self):
+    tokens: List[str]
+    code: Code
+
+    def __init__(self, tokens: Iterable[str] = []) -> None:
+        self.tokens = []
         # TODO: Dict of something
         self.symbols = {}
         self.nums = {
@@ -24,6 +28,7 @@ class RuleEngine:
             "nine": 9,
             "ten": 10,
         }
+        self.add_tokens(tokens)
 
     @classmethod
     def find_next(self, tokens, *containers):
@@ -57,34 +62,57 @@ class RuleEngine:
             return False
 
     @classmethod
-    def consume(self, tokens):
-        return tokens[1:]
-
-    @classmethod
     def consume_many(self, tokens, number):
         return tokens[1 + number :]
 
-    def parse(self, code: Code, text: str) -> Code:
-        tokens = text.strip().split(" ")
+    def add_tokens(self, tokens: Iterable[str]) -> None:
+        transforms = {
+            "greater than": "greater_than",
+            "less than": "less_than",
+            "greater than or equal to": "greater_than_or_equal_to",
+        }
 
-        parsed_tokens = []
-        for token in tokens:
-            lowercase_token = token.lower()
-            if lowercase_token in PrimaryKeywords:
-                parsed_tokens.append(PrimaryKeywords[token])
-            elif lowercase_token in SecondaryKeywords:
-                parsed_tokens.append(SecondaryKeywords[token])
-            else:
-                parsed_tokens.append(token)
+        body = " ".join(tokens)
 
-        return self.parse_core(code, tokens)
+        for dirty, clean in transforms.items():
+            body = body.replace(dirty, clean)
 
-    def parse_core(self, code: Code, tokens: List[Any]) -> Code:
-        first = tokens[0]
-        if first in PrimaryKeywords:
-            return getattr(self, f"parse_{first.value}")(tokens)
-        else:
-            print("NOT IMPLEMENTED EXCEPTION")
+        self.tokens += list(body.split())
+
+    def peek(self) -> str:
+        assert len(self.tokens) >= 1, f"called peek with {self.tokens}"
+        return self.tokens[0]
+
+    def peekpeek(self) -> str:
+        assert len(self.tokens) >= 2, f"called peekpeek with {self.tokens}"
+        return self.tokens[1]
+
+    def pop(self) -> str:
+        top = self.tokens[0]
+        self.tokens = self.tokens[1:]
+        return top
+
+    def parse(self, code: Code) -> Code:
+        """
+        Consumes tokens from self.tokens and returns a new Code with additional lines.
+        """
+
+        # based on first token in self.tokens, do something different
+        parse_fns: Dict[str, ParseFunc] = {
+            "for": self.parse_for,
+            "if": self.parse_if,
+            "set": self.parse_set,
+            "function": self.parse_function,
+            "call": self.parse_call,
+            "append": self.parse_append,
+            "prepend": self.parse_prepend,
+        }
+
+        while self.peek() in parse_fns:
+            parsed_line = parse_fns[self.pop()](self.code)
+            self.code.add_line(parsed_line)
+
+        return self.code
 
     def _build_func_definition(self, name: str, params: List[str]) -> str:
         paramstr = ", ".join(params)
@@ -111,8 +139,8 @@ class RuleEngine:
 
         return [self._build_func_definition(func_name, params)]
 
-    def parse_call(self, tokens):
-        pass
+    def parse_call(self, code: Code) -> str:
+        raise NotImplementedError()
 
     def parse_return(self, tokens):
         return f"return {self.parse_core(tokens)}\n"
@@ -227,3 +255,35 @@ class RuleEngine:
             # col = find_best_match(col)
             code_rep.append(f"for {iter_var} in {col}:\n")
         return code_rep
+
+    def parse_expression(self, code: Code) -> str:
+        expression: List[str] = []
+
+        ops = {
+            "times": "*",
+            "plus": "+",
+            "minus": "-",
+            "greater_than": ">",
+            "less_than": "<",
+        }
+
+        expression.append(self.parse_variable(code))
+
+        if self.tokens and self.peek() in ops:
+            expression.append(ops[self.pop()])
+            expression.append(self.parse_expression(code))
+        elif self.tokens and self.peek() == "dot":
+            self.pop()  # discard .
+            expression[-1] += "." + self.parse_variable(code)
+
+        return " ".join(expression)
+
+    def parse_variable(self, code: Code) -> str:
+        variable = []
+
+        keywords = PrimaryKeywords.list_values() + SecondaryKeywords.list_values()
+
+        while self.tokens and (self.peek() not in keywords):
+            variable.append(self.pop())
+
+        return "_".join(variable)

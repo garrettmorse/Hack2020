@@ -2,7 +2,7 @@ from typing import List
 from transformers import BartForConditionalGeneration, BartTokenizer
 
 
-class Parser:
+class BartEngine:
     def __init__(self):
         self.model = BartForConditionalGeneration.from_pretrained("./models/bart-coder")
         self.tokenizer = BartTokenizer.from_pretrained("facebook/bart-base")
