@@ -4,7 +4,7 @@ HackOHI/O 2020
 
 ## Demo
 
-[![demo](/other/demo.mp4)]
+[![Demo Video](https://img.youtube.com/vi/YzGKLUlunUM/maxresdefault.jpg)](https://youtu.be/YzGKLUlunUM)
 
 ## Team
 
