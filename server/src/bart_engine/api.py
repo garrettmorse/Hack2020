@@ -35,4 +35,6 @@ class BartEngine:
         return result
 
     def predict(self, utterance: str) -> List[str]:
+        if utterance.lower() in set(["tapout", "tabout", "tab out", "tap out"]):
+            return ["tabout"]
         return self.predict_batch([utterance])[0]
