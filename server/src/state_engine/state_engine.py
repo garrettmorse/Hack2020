@@ -26,6 +26,9 @@ class StateEngine:
         self.code = code
         self.save_history()
 
+    def get_code_deepcopy(self) -> Code:
+        return copy.deepcopy(self.code)
+
     def print_code(self) -> str:
         return self.code.print_lines()
 
@@ -45,6 +48,3 @@ class StateEngine:
             self.history_pos -= 1
         state = self.history[self.history_pos]
         self.set_state(state)
-
-    def get_deepcopy(self) -> StateEngine:
-        return copy.deepcopy(self)
