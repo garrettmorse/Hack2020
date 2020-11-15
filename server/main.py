@@ -36,8 +36,9 @@ def operations_undo():
 @app.route("/operations/execute", methods=["POST"])
 def operations_execute():
     body = request.json
-    raw_code = body.get("code", None)
-    state_engine.set_code(raw_code)
+    if body.get("edited", False):
+        raw_code = body.get("code", None)
+        state_engine.set_code(raw_code)
 
     result = {"output": "Error. Something went wrong", "success": False}
 
