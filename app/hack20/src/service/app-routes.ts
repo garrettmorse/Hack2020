@@ -13,6 +13,10 @@ class AppRoutes {
     undoCode() {
         return http.post(`/operations/undo`);
     }
+
+    reset() {
+        return http.post(`/operations/reset`);
+    }
 }
 
 export default new AppRoutes();
