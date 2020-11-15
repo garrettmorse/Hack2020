@@ -2,6 +2,17 @@ from src.rule_engine.rule_engine import RuleEngine
 from src.state_engine.code import Code
 
 
+def test_main_func() -> None:
+    tokens = ["function", "main", "zero", "arguments"]
+
+    code = Code()
+    engine = RuleEngine()
+    engine.add_tokens(tokens)
+
+    assert engine.parse_function(code) == "def main():"
+    assert engine.tokens == "".split()
+
+
 def test_basic_func() -> None:
     tokens = "function f two arguments a and b".split()
 
