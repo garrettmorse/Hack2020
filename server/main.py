@@ -1,5 +1,6 @@
 import io
 import sys
+from typing import Any, Dict
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -18,24 +19,25 @@ state_engine = StateEngine()
 
 # Routes
 @app.route("/", methods=["GET"])
-def status():
+def status() -> str:
     return "Running"
 
 
 @app.route("/operations/redo", methods=["POST"])
-def operations_redo():
+def operations_redo() -> str:
     return "NOT IMPLEMENTED EXCEPTION"
 
 
 @app.route("/operations/undo", methods=["POST"])
-def operations_undo():
+def operations_undo() -> Dict[str, Any]:
     state_engine.undo_history()
     return {"code": state_engine.print_code(), "success": True}
 
 
 @app.route("/operations/execute", methods=["POST"])
-def operations_execute():
+def operations_execute() -> Dict[str, Any]:
     body = request.json
+    print(body)
     if body.get("edited", False):
         raw_code = body.get("code", None)
         state_engine.set_code(raw_code)
@@ -68,8 +70,9 @@ def operations_execute():
 
 
 @app.route("/operations/process", methods=["POST"])
-def operations_process():
+def operations_process() -> Dict[str, Any]:
     body = request.json
+    print(body)
     # raw_text = body.get("transcript", None)
     if body.get("edited", False):
         raw_code = body.get("code", None)

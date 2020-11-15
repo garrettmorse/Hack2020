@@ -15,10 +15,16 @@ class MyEditor extends React.Component<any, any> {
         return (
             <Container>
                 <Button
-                    onClick={() => this.props.handleCode()}
+                    onClick={this.props.handleCode}
                     icon labelPosition='left' >
                     <Icon name='play' />
                     Run
+                </Button>
+                <Button
+                    onClick={this.props.handleUndo}
+                    icon labelPosition='left' >
+                    <Icon name='redo' />
+                    Undo
                 </Button>
                 {this.props.loading ? <Icon style={{ marginLeft: 10 }} loading name='sync' /> : ''}
                 <AceEditor
