@@ -7,6 +7,7 @@ def test_variable() -> None:
     engine = RuleEngine(tokens)
 
     code = Code()
+    code.symbols.add_variable_symbol("a")
 
     assert engine.parse_expression(code) == "a"
 
@@ -18,6 +19,58 @@ def test_variable_thirteen() -> None:
     code = Code()
 
     assert engine.parse_expression(code) == "13"
+
+
+def test_variable_thirteen_foo() -> None:
+    tokens = "thirteen foo".split()
+    engine = RuleEngine(tokens)
+
+    code = Code()
+
+    assert engine.parse_expression(code) == "13"
+    assert engine.tokens == ["foo"]
+
+
+def test_variable_foo_txt_twelve() -> None:
+    tokens = "foo dot txt twelve".split()
+    engine = RuleEngine(tokens)
+
+    code = Code()
+
+    assert engine.parse_expression(code) == "'foo.txt'"
+    assert engine.tokens == ["twelve"]
+
+
+def test_variable_txt_twelve() -> None:
+    tokens = "txt twelve".split()
+    engine = RuleEngine(tokens)
+
+    code = Code()
+    code.symbols.add_variable_symbol("txt")
+
+    assert engine.parse_variable(code) == "txt"
+    assert engine.tokens == ["twelve"]
+
+
+def test_variable_txt_twelve() -> None:
+    tokens = "txt twelve".split()
+    engine = RuleEngine(tokens)
+
+    code = Code()
+
+    assert engine.parse_variable(code) == "txt"
+    assert engine.tokens == ["twelve"]
+
+
+def test_variable_foo_twelve() -> None:
+    tokens = "foo twelve".split()
+    engine = RuleEngine(tokens)
+
+    code = Code()
+    code.symbols.add_variable_symbol("foo")
+
+    assert engine.parse_expression(code) == "foo"
+    assert engine.tokens == ["twelve"]
 
 
 def test_addition() -> None:
@@ -85,6 +138,7 @@ def test_expression_with_dot() -> None:
     engine = RuleEngine(tokens)
 
     code = Code()
+    code.symbols.add_variable_symbol("file")
 
     assert engine.parse_expression(code) == "file.read"
     assert engine.tokens == []
@@ -95,16 +149,7 @@ def test_multi_word_expression_with_dot() -> None:
     engine = RuleEngine(tokens)
 
     code = Code()
-
-    assert engine.parse_expression(code) == "my_file.read"
-    assert engine.tokens == []
-
-
-def test_multi_word_expression_with_dot() -> None:
-    tokens = "my file dot read".split()
-    engine = RuleEngine(tokens)
-
-    code = Code()
+    code.symbols.add_variable_symbol("my_file")
 
     assert engine.parse_expression(code) == "my_file.read"
     assert engine.tokens == []

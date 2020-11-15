@@ -37,6 +37,7 @@ class SecondaryKeywords(enum.Enum):
     TO = "to"
     RANGE = "range"
     IN = "in"
+    MODULO = "modulo"
 
     @staticmethod
     def values() -> List[str]:

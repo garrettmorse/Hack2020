@@ -18,6 +18,7 @@ class Code:
         self.global_tab_number = global_tab_number
         self.print_lines_cache: Optional[str] = None
         self.symbols = Symbols()
+        self.symbols.add_function_symbol("print", "arg")
 
     def add_line(self, value: str, tab_out_number: int = 0) -> None:
         self.print_lines_cache = None
