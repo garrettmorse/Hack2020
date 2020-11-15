@@ -14,21 +14,8 @@ class RuleEngine:
     def __init__(self, tokens: Iterable[str] = []) -> None:
         self.tokens = []
         # TODO: Dict of something
-        self.symbols = {}
+
         self.tokens = []
-        self.nums = {
-            "zero": 0,
-            "one": 1,
-            "two": 2,
-            "three": 3,
-            "four": 4,
-            "five": 5,
-            "six": 6,
-            "seven": 7,
-            "eight": 8,
-            "nine": 9,
-            "ten": 10,
-        }
         self.add_tokens(tokens)
 
     @classmethod
@@ -135,8 +122,7 @@ class RuleEngine:
             stop_i = len(tokens)
         and_i, _ = self.find_next_specific(tokens, "and")
 
-        assert tokens[arg_i - 1] in self.nums, f"{tokens[arg_i:-2:arg_i+2]}"
-        num_args = self.nums[tokens[arg_i - 1]]
+        num_args = utils.text2int(tokens[arg_i - 1])
         params = ["" for i in range(num_args)]
         func_name = "_".join(tokens[: arg_i - 1])
 
@@ -164,10 +150,10 @@ class RuleEngine:
         """
         CALL print file length times file size
         """
-        assert self.peek() == "call"
+        self.check_next("call")
         self.pop()
         func_name = self.parse_variable(code, context="function")
-        _, num_params = code.symbol.get_function(func_name)
+        _, num_params = code.symbols.get_function(func_name)
 
         params = []
         for i in range(num_params):
@@ -177,10 +163,10 @@ class RuleEngine:
         return f"{func_name}({param_str})"
 
     def parse_return(self, code: Code) -> str:
-        assert self.peek() == "return"
+        self.check_next("return")
         self.pop()
         expr = self.parse_expression(code)
-        return f"return {expr}\n"
+        return f"return {expr}"
 
     def parse_if(self, code: Code) -> str:
         """
@@ -190,6 +176,7 @@ class RuleEngine:
         self.pop()
 
         expr = self.parse_expression(code)
+
         self.check_next("then")
         self.pop()
 
@@ -199,9 +186,9 @@ class RuleEngine:
         """
         ELSE action
         """
-        assert self.peek() == "else"
+        self.check_next("else")
         self.pop()
-        return f"else:"
+        return "else:"
 
     def parse_set(self, code: Code) -> str:
         """
