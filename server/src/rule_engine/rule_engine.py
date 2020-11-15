@@ -106,20 +106,21 @@ class RuleEngine:
             "prepend": self.parse_prepend,
         }
 
-        while self.peek() in parse_fns:
-            parsed_line = parse_fns[self.pop()](code)
+        while self.tokens and self.peek() in parse_fns:
+            parsed_line = parse_fns[self.peek()](code)
             code.add_line(parsed_line)
 
         return code
 
     def parse_function(self, code: Code) -> str:
         self.check_next("function")
-        tokens = self.tokens[1:]
+        self.pop()
+        tokens = self.tokens
 
-        arg_i, _ = self.find_next_specific(tokens, "argument")
-        stop_i, _ = self.find_next(tokens, PrimaryKeywords.values())
+        arg_i = self.tokens.index("argument")
+        stop_i, _ = self.find_next(self.tokens, PrimaryKeywords.values())
         if stop_i < 0:
-            stop_i = len(tokens)
+            stop_i = len(self.tokens)
         and_i, _ = self.find_next_specific(tokens, "and")
 
         num_args = utils.text2int(tokens[arg_i - 1])
@@ -130,15 +131,19 @@ class RuleEngine:
         if and_i != -1:
             last_param = "_".join(tokens[and_i + 1 : stop_i])
 
-        if num_args > 0:
+        if num_args == 1:
+            params = ["_".join(tokens[arg_i + 1 : stop_i])]
+        elif num_args > 0:
             params = tokens[arg_i + 1 : arg_i + num_args - 1]
 
-        param_tokens = tokens[arg_i + 1 : and_i]
-        i = 0
-        while i < num_args - 1:
-            params[i] = param_tokens[i]
-            i += 1
-        params[i] = "_".join(param_tokens[i:])
+            if and_i < 0:
+                and_i = stop_i
+            params.append("_".join(tokens[arg_i + num_args - 1 : and_i]))
+
+            code.symbols.add_function_symbol(func_name, *params)
+
+        if last_param:
+            params.append(last_param)
 
         paramstr = ", ".join(params)
         self.tokens = tokens[stop_i:]

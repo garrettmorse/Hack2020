@@ -2,8 +2,8 @@
 Tries to test cycles of /operations/cycles
 """
 
-from src.rule_engine.rule_engine import RuleEngine
-from src.state_engine.state_engine import StateEngine
+from src import RuleEngine, StateEngine
+from src.state_engine import Code
 
 
 def test_initial_utterance() -> None:
@@ -13,9 +13,9 @@ def test_initial_utterance() -> None:
     tokens = "function read file one argument file location".split()
 
     rule_engine.add_tokens(tokens)
-    new_code = rule_engine.parse(state_engine.code)
+    new_code = rule_engine.parse(Code())
     state_engine.set_code(new_code)
-    assert state_engine.print_code() == "def read_file(file_location):"
+    assert state_engine.print_code() == "def read_file(file_location):\n"
     assert rule_engine.tokens == []
 
     tokens = "if call len file location is less than twelve then".split()
