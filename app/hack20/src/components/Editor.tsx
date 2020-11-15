@@ -15,6 +15,7 @@ class MyEditor extends React.Component<any, any> {
         return (
             <Container>
                 <Button
+                    color="green"
                     onClick={this.props.handleCode}
                     icon labelPosition='left' >
                     <Icon name='play' />
