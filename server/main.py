@@ -69,15 +69,16 @@ def operations_execute():
 @app.route("/operations/process", methods=["POST"])
 def operations_process():
     body = request.json
-    raw_text = body.get("transcript", None)
-    raw_code = body.get("code", None)
+    # raw_text = body.get("transcript", None)
+    if body.get("edited", False):
+        raw_code = body.get("code", None)
+        state_engine.set_code(raw_code)
 
     # TODO: Wait for model ~3GB
-    # text = parser.predict(raw_text)
-
-    # TODO: Feed raw_code into parse
-    new_code = rule_engine.parse(state_engine.code, raw_text)
-    state_engine.set_code(raw_code + new_code)
+    # tokens = parser.predict(raw_text)
+    rule_engine.add_tokens(tokens)
+    new_code = rule_engine.parse(state_engine.code)
+    state_engine.set_code(new_code)
 
     return {"code": state_engine.print_code(), "success": True}
 
