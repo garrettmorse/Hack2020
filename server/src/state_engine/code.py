@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from typing import List, Optional, Type
 
 from .symbols import Symbols
@@ -47,7 +48,7 @@ class Code:
 
         for index, raw_line in enumerate(raw_lines):
             pos = 0
-            while raw_line and raw_line[pos] == "\t":
+            while raw_line and pos < len(raw_line) and raw_line[pos] == "\t":
                 pos += 1
             lines.append(Line(raw_line[pos:], index, pos))
 
