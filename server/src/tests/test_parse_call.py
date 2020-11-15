@@ -2,6 +2,17 @@ from src.rule_engine.rule_engine import RuleEngine
 from src.state_engine.code import Code
 
 
+def test_call_print() -> None:
+    tokens = "call print hello".split()
+
+    engine = RuleEngine(tokens)
+
+    code = Code()
+
+    assert engine.parse_call(code) == "print(hello)"
+    assert engine.tokens == "".split()
+
+
 def test_no_defined_func_call() -> None:
     tokens = "call f a b".split()
 
@@ -74,7 +85,7 @@ def test_call_with_multi_words() -> None:
     assert engine.tokens == "".split()
 
 
-def test_call_with_multi_words() -> None:
+def test_call_with_multi_words4() -> None:
     func_tokens = "function read file one argument file name return one".split()
 
     engine = RuleEngine(func_tokens)
@@ -89,7 +100,7 @@ def test_call_with_multi_words() -> None:
     assert engine.tokens == "".split()
 
 
-def test_call_with_multi_words() -> None:
+def test_call_with_multi_words3() -> None:
     func_tokens = (
         "function read file two arguments file name and length return length".split()
     )
@@ -107,7 +118,7 @@ def test_call_with_multi_words() -> None:
     assert engine.tokens == "".split()
 
 
-def test_call_with_multi_words() -> None:
+def test_call_with_multi_words2() -> None:
     func_tokens = (
         "function read file two arguments file name and length return length".split()
     )

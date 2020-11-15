@@ -1,5 +1,6 @@
-from src.state_engine.code import Line
 from typing import Callable, Dict, Iterable, List, Optional, Tuple
+
+from src.state_engine.code import Line
 from typing_extensions import Literal
 
 from ..state_engine import Code
@@ -58,11 +59,12 @@ class RuleEngine:
         transforms = {  # order is important
             "arguments": "argument",
             "greater than or equal to": "greater_than_or_equal_to",
+            "less than or equal to": "less_than_or_equal_to",
             "greater than": "greater_than",
             "less than": "less_than",
         }
 
-        body = " ".join(tokens)
+        body = " ".join(tokens).lower()
 
         for dirty, clean in transforms.items():
             body = body.replace(dirty, clean)
@@ -109,8 +111,8 @@ class RuleEngine:
             "prepend": self.parse_prepend,
             "return": self.parse_return,
             "tabout": self.parse_tabout,
-            "delete" : self.parse_delete,
-            "goto": self.parse_goto
+            "delete": self.parse_delete,
+            "goto": self.parse_goto,
         }
 
         while self.tokens and self.peek() in parse_fns:
@@ -298,6 +300,7 @@ class RuleEngine:
             return f"for {iter_var} in {col}:"
 
     def parse_expression(self, code: Code) -> str:
+
         expression: List[str] = []
 
         ops = {
@@ -307,12 +310,16 @@ class RuleEngine:
             "modulo": "%",
             "greater_than": ">",
             "greater_than_or_equal_to": ">=",
+            "less_than_or_equal_to": "<=",
             "less_than": "<",
             "equals": "==",
             "and": "and",
         }
 
-        expression.append(self.parse_variable(code))
+        if self.peek() == "call":
+            expression.append(self.parse_call(code))
+        else:
+            expression.append(self.parse_variable(code))
 
         if self.tokens and self.peek() == "dot":
             self.pop()  # discard .

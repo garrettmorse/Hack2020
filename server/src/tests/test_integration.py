@@ -2,9 +2,10 @@
 Tries to test cycles of /operations/cycles
 """
 
+import pytest
 from src import RuleEngine
 from src.state_engine import Code
-import pytest
+
 
 @pytest.mark.skip(reason="its a miracle any of this works")
 def test_fizz_buzz() -> None:
