@@ -1,9 +1,7 @@
 from typing import Callable, Dict, Iterable, List, Optional, Tuple
 
-from src.state_engine.code import Line
 from typing_extensions import Literal
 
-import copy
 from ..state_engine import Code
 from . import utils
 from .keywords import PrimaryKeywords, SecondaryKeywords
@@ -62,6 +60,7 @@ class RuleEngine:
             "less than or equal to": "less_than_or_equal_to",
             "greater than": "greater_than",
             "less than": "less_than",
+            "go to": "goto",
         }
 
         body = " ".join(tokens).lower()
@@ -113,15 +112,16 @@ class RuleEngine:
             "tabout": self.parse_tabout,
             "remove": self.parse_delete,
             "goto": self.parse_goto,
+            "quote": self.parse_string
         }
 
         while self.tokens and self.peek() in parse_fns:
             spec = self.peek()
             parsed_line = parse_fns[self.peek()](code)
-            if spec != "goto" and spec != "delete":
+            if spec != "goto" and spec != "remove":
                 code.add_line(parsed_line)
 
-        return copy.deepcopy(code)
+        return code
 
     def parse_tabout(self, code: Code) -> str:
         self.check_next("tabout")
@@ -427,3 +427,16 @@ class RuleEngine:
         else:
             line_num = self.parse_variable(code)
             code.delete_line(int(line_num))
+
+    def parse_string(self, code: Code) -> str:
+        """
+        QUOTE expression QUOTE
+        """
+        assert self.peek() == "quote"
+        self.pop()
+
+        next_q_i = self.find_next_specific(self.tokens, "quote")
+        repr = '"' + " ".join(self.tokens[:next_q_i]) + '"'
+
+        self.tokens = self.tokens[:next_q_i + 1]
+        return repr
