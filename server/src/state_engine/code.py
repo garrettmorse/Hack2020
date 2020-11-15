@@ -33,7 +33,7 @@ class Code:
             results = [
                 ((line.tab_number * "\t") + line.value + "\n") for line in self.lines
             ]
-            self.print_lines_cache = "".join(results)
+            self.print_lines_cache = "".join(results).rstrip()
         return self.print_lines_cache
 
     @classmethod
