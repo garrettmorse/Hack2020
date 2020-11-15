@@ -9,7 +9,12 @@ class BartEngine:
         self.tokenizer = BartTokenizer.from_pretrained("facebook/bart-base")
 
     def preprocess(self, text: str) -> str:
-        return text.replace("+", "plus").replace("*", "times")
+        return (
+            text.lower()
+            .replace("+", "plus")
+            .replace("*", "times")
+            .replace("-", "minus")
+        )
 
     def predict_batch(self, utterances: List[str]) -> List[List[str]]:
         utterances = [self.preprocess(u) for u in utterances]
