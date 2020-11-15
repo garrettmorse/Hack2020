@@ -109,11 +109,15 @@ class RuleEngine:
             "prepend": self.parse_prepend,
             "return": self.parse_return,
             "tabout": self.parse_tabout,
+            "delete" : self.parse_delete,
+            "goto": self.parse_goto
         }
 
         while self.tokens and self.peek() in parse_fns:
+            spec = self.peek()
             parsed_line = parse_fns[self.peek()](code)
-            code.add_line(parsed_line)
+            if spec != "goto" and spec != "delete":
+                code.add_line(parsed_line)
 
         return code
 
@@ -394,7 +398,7 @@ class RuleEngine:
             code.set_cursor_to_beginning()
         else:
             line_num = self.parse_variable(code)
-            code.set_cursor_to_end(int(line_num))
+            code.set_cursor(int(line_num))
 
     def parse_delete(self, code: Code) -> None:
         """
@@ -415,4 +419,4 @@ class RuleEngine:
             code.delete_first_line()
         else:
             line_num = self.parse_variable(code)
-            code.delete_line()
+            code.delete_line(int(line_num))

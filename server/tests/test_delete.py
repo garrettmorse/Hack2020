@@ -1,11 +1,10 @@
-from src import rule_engine
 from src.rule_engine.rule_engine import RuleEngine
 from src.state_engine.code import Code
 
 
 def test_delete_end() -> None:
-    tokens = "function y two argument x and y"
-    engine = RuleEngine(tokens)
+    tokens = "function y two argument x and y".split()
+    rule_engine = RuleEngine(tokens)
 
     code = Code()
 
@@ -13,7 +12,6 @@ def test_delete_end() -> None:
         tokens = f"set x to {i}".split()
 
         rule_engine.add_tokens(tokens)
-        code = rule_engine.parse(code)
 
     tokens = "delete line end".split()
     rule_engine.add_tokens(tokens)
@@ -23,8 +21,8 @@ def test_delete_end() -> None:
     assert "8" in code.lines[-1]
 
 def test_delete_beginning() -> None:
-    tokens = "function y two argument x and y"
-    engine = RuleEngine(tokens)
+    tokens = "function y two argument x and y".split()
+    rule_engine = RuleEngine(tokens)
 
     code = Code()
 
@@ -32,7 +30,6 @@ def test_delete_beginning() -> None:
         tokens = f"set x to {i}".split()
 
         rule_engine.add_tokens(tokens)
-        code = rule_engine.parse(code)
 
     tokens = "delete line end".split()
     rule_engine.add_tokens(tokens)
@@ -42,8 +39,8 @@ def test_delete_beginning() -> None:
     assert "def" not in code.lines[0]
 
 def test_delete_line() -> None:
-    tokens = "function y two argument x and y"
-    engine = RuleEngine(tokens)
+    tokens = "function y two argument x and y".split()
+    rule_engine = RuleEngine(tokens)
 
     code = Code()
 
@@ -51,7 +48,6 @@ def test_delete_line() -> None:
         tokens = f"set x to {i}".split()
 
         rule_engine.add_tokens(tokens)
-        code = rule_engine.parse(code)
 
     tokens = "delete line three".split()
     rule_engine.add_tokens(tokens)
