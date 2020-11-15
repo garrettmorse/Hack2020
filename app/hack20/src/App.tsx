@@ -1,13 +1,12 @@
 import React from 'react';
 import './App.css';
-import { Container, Divider, Grid, Header, Icon, Menu, Segment } from 'semantic-ui-react';
+import { Container, Divider, Grid, Header, Icon, Item, Menu } from 'semantic-ui-react';
 import MyEditor from './components/Editor';
 import Listen from './components/Listen';
-import Output from './components/Output';
 import AppRoutes from './service/app-routes';
 import { sample } from './static/constants.json';
 
-class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean, sendLoader: boolean, transcript: string, code: string, output: string }> {
+class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean, sendLoader: boolean, transcript: string, code: string, output: string[] }> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -16,7 +15,7 @@ class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean
       transcript: '',
       code: sample,
       codeEdited: false,
-      output: ''
+      output: []
     }
   }
   /*
@@ -73,22 +72,30 @@ class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean
     await AppRoutes.undoCode()
       .then(res => {
         this.onCodeChange(res.data.code);
+        this.setState(prevState => ({
+          output: prevState.output.slice(0, -1)
+        }));
       });
   }
 
   onOutputChange = (newOutput: string) => {
-    const outputStr = this.state.output === "" ? newOutput : this.state.output + '\n-----\n' + newOutput;
-    console.log(`before update state.output: ${this.state.output}`);
-    this.setState({ output: outputStr });
-    console.log(`after update state.output: ${this.state.output}`);
+    console.log(newOutput);
+    console.log('before: ' + this.state.output);
+    this.setState(prevState => ({
+      output: [...prevState.output, newOutput]
+    }));
+
+    console.log(this.state.output);
   }
 
   onOutputClear = () => {
-    this.setState({ output: '' });
+    this.setState({ output: [] });
   }
-  sleep(ms: any) {
+
+  sleep = (ms: any) => {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+
   render() {
     return (
       <div>
@@ -122,10 +129,13 @@ class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean
                   </Container>
                 </Grid.Row>
                 <Grid.Row verticalAlign='bottom'>
-                  <Container >
+                  <Container>
                     <Header style={{ marginTop: 10 }} as='h3'>Output</Header>
-                    <span style={{ whiteSpace: 'pre-line' }}>{this.state.output}</span>
-                    {/* <Output output={this.state.output} /> */}
+                    <Item.Group style={{ height: '30vh', overflowY: 'scroll' }} divided>
+                      {this.state.output.map(elem => {
+                        return <Item><span style={{ whiteSpace: "pre-line" }}>{elem}</span></Item>
+                      })}
+                    </Item.Group>
                   </Container>
                 </Grid.Row>
               </Grid>
