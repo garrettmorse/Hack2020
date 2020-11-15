@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import List, Optional
 
+from .symbols import Symbols
+
 
 class Line:
     def __init__(self, value: str, line_number: int, tab_number: int) -> None:
@@ -15,6 +17,7 @@ class Code:
         self.lines = lines
         self.global_tab_number = global_tab_number
         self.print_lines_cache: Optional[str] = None
+        self.symbols = Symbols()
 
     def add_line(self, value: str, tab_out_number: int = 0) -> None:
         self.print_lines_cache = None
