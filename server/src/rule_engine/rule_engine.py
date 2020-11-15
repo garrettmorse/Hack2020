@@ -110,11 +110,12 @@ class RuleEngine:
             params[-1] = "_".join(tokens[and_i + 1:stop_i])
             num_args = num_args - 1
 
-        params = tokens[:num_args - 1]
-
-        params.append("_".join(tokens[num_args - 1:and_i]))
-
-        code.symbols.add(func_name, *params)
+        param_tokens = tokens[arg + 1:and_i]
+        i = 0
+        while i < num_args - 1:
+            params[i] = param_tokens[i]
+            i += 1
+        params[i] = "_".join(param_tokens[i:])
 
         paramstr = ", ".join(params)
         self.tokens = tokens[stop_i:]
