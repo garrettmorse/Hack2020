@@ -62,6 +62,7 @@ class RuleEngine:
             "less than or equal to": "less_than_or_equal_to",
             "greater than": "greater_than",
             "less than": "less_than",
+            "go to": "goto",
         }
 
         body = " ".join(tokens).lower()
