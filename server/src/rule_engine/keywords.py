@@ -13,6 +13,8 @@ class PrimaryKeywords(enum.Enum):
     PREPEND = "prepend"
     FOR = "for"
     TABOUT = "tabout"
+    GOTO = "goto"
+    DELETE = "delete"
 
     @staticmethod
     def values() -> List[str]:

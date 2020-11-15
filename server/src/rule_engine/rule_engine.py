@@ -320,3 +320,35 @@ class RuleEngine:
             pass
 
         return "_".join(variable)
+
+    def parse_goto(self, code: Code) -> None:
+        """
+        GOTO line 58
+
+        GOTO line END
+        """
+        self.check_next("goto")
+        self.pop()
+        self.check_next("line")
+        self.pop()
+
+        if self.peek() == "end":
+            self.pop()
+            code.set_cursor_to_end()
+        else:
+            line_num = self.parse_variable(code)
+            code.set_cursor_to_end(int(line_num))
+
+    def parse_delete(self, code: Code) -> None:
+        """
+        DELETE line 58
+
+        DELETE line END
+        """
+        assert self.peek() == "delete"
+        self.pop()
+        self.check_next("line")
+        self.pop()
+
+        line_num = self.parse_variable(code)
+        code.delete_line(int(line_num))
