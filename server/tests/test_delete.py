@@ -6,7 +6,7 @@ def test_delete_end() -> None:
     tokens = "function y two argument x and y".split()
     rule_engine = RuleEngine(tokens)
 
-    code = Code()
+    code = Code([])
 
     for i in range(10):
         tokens = f"set x to {i}".split()
@@ -17,32 +17,33 @@ def test_delete_end() -> None:
     rule_engine.add_tokens(tokens)
     code = rule_engine.parse(code)
 
+    print(code.print_lines())
     assert len(code.lines) == 10
-    assert "8" in code.lines[-1]
+    assert "9" not in code.print_lines()
 
 def test_delete_beginning() -> None:
     tokens = "function y two argument x and y".split()
     rule_engine = RuleEngine(tokens)
 
-    code = Code()
+    code = Code([])
 
     for i in range(10):
         tokens = f"set x to {i}".split()
 
         rule_engine.add_tokens(tokens)
 
-    tokens = "delete line end".split()
+    tokens = "delete line beginning".split()
     rule_engine.add_tokens(tokens)
     code = rule_engine.parse(code)
 
     assert len(code.lines) == 10
-    assert "def" not in code.lines[0]
+    assert "def" not in code.print_lines()
 
 def test_delete_line() -> None:
     tokens = "function y two argument x and y".split()
     rule_engine = RuleEngine(tokens)
 
-    code = Code()
+    code = Code([])
 
     for i in range(10):
         tokens = f"set x to {i}".split()
@@ -54,4 +55,4 @@ def test_delete_line() -> None:
     code = rule_engine.parse(code)
 
     assert len(code.lines) == 10
-    assert "2" in code.lines[2]
+    assert "1" not in code.print_lines()
