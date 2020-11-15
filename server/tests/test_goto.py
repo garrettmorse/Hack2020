@@ -22,7 +22,7 @@ def test_goto_end() -> None:
 
     print(rule_engine.tokens)
     assert len(new_code.lines) == 11
-    assert new_code.cursor_position == 1
+    assert new_code.cursor_position == 11
 
 
 def test_goto_beginning() -> None:
