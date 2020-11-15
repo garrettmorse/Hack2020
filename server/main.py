@@ -14,7 +14,7 @@ CORS(app)
 # Engine Setup
 state_engine = StateEngine()
 # bart_engine = BartEngine()
-# rule_engine = RuleEngine()
+rule_engine = RuleEngine()
 
 
 # Routes
@@ -42,7 +42,7 @@ def operations_execute() -> Dict[str, Any]:
         raw_code = body.get("code", None)
         state_engine.parse_and_set_code(raw_code)
 
-    code = (state_engine.print_code(),)
+    code = state_engine.print_code()
 
     try:
         code_out, code_err = io.StringIO(), io.StringIO()
@@ -70,6 +70,7 @@ def operations_execute() -> Dict[str, Any]:
 
     sys.stdout = sys.__stdout__
     sys.stderr = sys.__stderr__
+    print(result)
     return result
 
 
@@ -84,12 +85,13 @@ def operations_process() -> Dict[str, Any]:
 
     # TODO: Wait for model ~3GB
     # tokens = bart_engine.predict(raw_text)
-    # TODO: Fix rule_engine
     # rule_engine.add_tokens(tokens)
     # new_code = rule_engine.parse(state_engine.code)
     # state_engine.set_code(new_code)
 
-    return {"code": state_engine.print_code(), "success": True}
+    result = {"code": state_engine.print_code(), "success": True}
+    print(result)
+    return result
 
 
 # Main

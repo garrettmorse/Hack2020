@@ -13,9 +13,6 @@ class RuleEngine:
 
     def __init__(self, tokens: Iterable[str] = []) -> None:
         self.tokens = []
-        # TODO: Dict of something
-
-        self.tokens = []
         self.add_tokens(tokens)
 
     @classmethod
