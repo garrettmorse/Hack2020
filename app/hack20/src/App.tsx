@@ -105,7 +105,7 @@ class App extends React.Component<{}, { codeEdited: boolean, execLoader: boolean
             <Icon style={{ color: '#6868f6', marginLeft: '-7%' }} name='angle right' />
             <Icon style={{ color: '#6868f6', marginLeft: '-9%' }} name='angle right' />
             <Icon style={{ color: '#6868f6', marginLeft: '-9%' }} name='angle right' />
-            <div style={{ marginRight: -40 }}>Hack 2020 by //todo</div></Menu.Item></Menu>
+            <div style={{ marginRight: -40 }}><strong>Hack 2020 by //todo</strong></div></Menu.Item></Menu>
         </div>
         <div style={{ margin: 10 }}>
           <Grid style={{ borderRadius: 5 }} celled columns={2} >
