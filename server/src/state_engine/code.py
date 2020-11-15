@@ -47,6 +47,12 @@ class Code:
 
         self.cursor_position -= 1
 
+    def delete_first_line(self) -> None:
+        self.delete_line(1)
+
+    def delete_last_line(self) -> None:
+        self.delete_line(len(self.lines))
+
     def print_lines(self) -> str:
         if not self.print_lines_cache:
             results = [
