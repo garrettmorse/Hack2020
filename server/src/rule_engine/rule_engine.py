@@ -3,6 +3,7 @@ from typing import Callable, Dict, Iterable, List, Optional, Tuple
 from src.state_engine.code import Line
 from typing_extensions import Literal
 
+import copy
 from ..state_engine import Code
 from . import utils
 from .keywords import PrimaryKeywords, SecondaryKeywords
@@ -12,7 +13,6 @@ ParseFunc = Callable[[Code], Optional[str]]
 
 class RuleEngine:
     tokens: List[str]
-    code: Code
 
     def __init__(self, tokens: Iterable[str] = []) -> None:
         self.tokens = []
@@ -112,7 +112,7 @@ class RuleEngine:
             "prepend": self.parse_prepend,
             "return": self.parse_return,
             "tabout": self.parse_tabout,
-            "delete": self.parse_delete,
+            "remove": self.parse_delete,
             "goto": self.parse_goto,
         }
 
@@ -122,7 +122,7 @@ class RuleEngine:
             if spec != "goto" and spec != "delete":
                 code.add_line(parsed_line)
 
-        return code
+        return copy.deepcopy(code)
 
     def parse_tabout(self, code: Code) -> str:
         self.check_next("tabout")
@@ -410,11 +410,11 @@ class RuleEngine:
 
     def parse_delete(self, code: Code) -> None:
         """
-        DELETE line 58
+        Remove line 58
 
-        DELETE line END
+        Remove line END
         """
-        assert self.peek() == "delete"
+        assert self.peek() == "remove"
         self.pop()
         self.check_next("line")
         self.pop()
