@@ -4,7 +4,10 @@ HackOHI/O 2020
 
 ## Team
 
-Anmol Takiar, Sam Stevens, Garrett Morse, Jason Guo
+- Anmol Takiar
+- Garrett Morse
+- Jason Guo
+- Sam Stevens
 
 ## Results
 
